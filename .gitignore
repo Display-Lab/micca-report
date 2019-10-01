@@ -1,0 +1,12 @@
+*.gz
+*.pdf
+*.png
+*.jpg
+*.tex
+*.log
+*.Rproj
+.Rhistory
+.Rproj.user/*
+*tikzDictionary
+
+

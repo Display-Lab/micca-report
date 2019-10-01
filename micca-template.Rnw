@@ -1,0 +1,222 @@
+\documentclass[letterpaper, 12pt]{article}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{helvet}
+\usepackage{geometry}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,breakable}
+
+%Redefine subfloat as per knitr instructions for using
+\newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+
+\newcommand\decorativeline[1][1pt]{
+	\par\noindent%
+	\rule[0.5ex]{\linewidth}{#1}\par
+}
+
+\newenvironment{manualout}{}{} % an empty environment to be redefined in TeX
+
+% box to help with debugging
+\newcommand\mybox[1]{%
+  \setlength\fboxsep{0pt}\fcolorbox{red}{white}{#1}
+}
+
+% Set the Paper Size and margins
+\geometry{margin=0.25in}
+\title{MICCA Report: XYZ Hospital Jan - Apr 2020}
+
+<<preflight, include=FALSE>>=
+library(knitr)
+library(tikzDevice)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+#library(pictoralist)
+# Subsequent load fonts call required.  Why isn't the load font in pictoralist making this work? Pictoralist #66
+#extrafont::loadfonts(device = "pdf", quiet=T)
+
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+raw_data <- readr::read_csv('micca-data.csv', trim_ws=T)
+
+#de-multiplex
+measure_lookup <- sapply(raw_data$measure, str_split, "-", n=2)
+payer_vals <- sapply(measure_lookup, `[`, 1)
+observation_vals <- sapply(measure_lookup, `[`, 2)
+
+fmt_data <- raw_data %>%
+  mutate(
+    month=factor(format(`date`, "%b"), levels=month.abb, ordered = T),
+    payer=payer_vals,
+    obs=observation_vals)
+#measure_categories <- c("private","medicaid", "other")
+@
+
+<<common_functs, include=FALSE >>=
+dl_annotate <- function(geom, x = NULL, y = NULL, xmin = NULL, xmax = NULL,
+                        ymin = NULL, ymax = NULL, xend = NULL, yend = NULL, na.rm = FALSE, ...) {
+  args_list <- list(...)
+  args_list["color"] <- "#00274C"
+  args_list["geom"] <- geom
+  args_list["x"] <- x
+  args_list["y"] <- list(y)
+  do.call(annotate, args = args_list)
+}
+
+@
+
+\begin{document}
+%\maketitle
+
+<< 'women_delivered', include=FALSE >>=
+df <- fmt_data %>% filter(obs == "delivered") 
+
+f_wmn_delv_bar <- ggplot(df, aes(x=month, y=denominator)) +
+  geom_bar(aes(fill=payer), stat='identity') +
+  ylab("Women Delivered") +
+  theme(legend.position="bottom", plot.background = element_rect(fill="yellow"),
+        axis.title.x = element_blank(), legend.title = element_blank())
+
+total_delivered <- sum(df$denominator)
+@
+
+<< counsel_cir, include=FALSE >>=
+top_performer_theme <- function(){
+  theme_classic() +
+    theme(axis.line=element_blank(),
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_rect(fill="pink"),
+          plot.margin = unit(c(-.1,-.1,-.1,-.1),"npc") )
+}
+
+df <- fmt_data %>% filter(obs == "postpartum-contra-counsel") 
+
+denom <- sum(df$denominator)
+numer <- sum(df$numerator)
+
+plot_data <- data.frame(
+  group = c("background", "performance", "background"),
+  value = c(denom, numer, denom - numer),
+  ring = c(58, 50, 50),
+  width = c(6,16,16)
+)
+
+color_set <- c("#00274C", "#e7edee", "#e7edee")
+percentage <- paste(floor(100*(numer / denom)), "%", sep="")
+f_counsel_circ <- ggplot(plot_data, aes(x=ring, y=value, fill=group, width=width)) +
+  geom_col(position=position_fill(), fill=color_set) +
+  scale_x_continuous(limits=c(0, max(plot_data$ring) + max(plot_data$width)/2)) +
+  coord_polar(theta="y", direction=-1) +
+  dl_annotate("text", x=10, y=0, label=percentage, size=12, color="#00274C", fontface=2) +
+  dl_annotate("text", x=26, y=.5, label="patients", size=3, color="#00274C") +
+  dl_annotate("text", x=18, y=.5, label=paste(numer, denom, sep="/"), size=4, color="#00274C") +
+  top_performer_theme() 
+@
+
+<< document_cir, include=FALSE >>=
+df <- fmt_data %>% filter(obs == "documented-contra-choice")
+
+denom <- sum(df$denominator)
+numer <- sum(df$numerator)
+
+plot_data <- data.frame(
+  group = c("background", "performance", "background"),
+  value = c(denom, numer, denom - numer),
+  ring = c(58, 50, 50),
+  width = c(6,16,16)
+)
+
+color_set <- c("#00274C", "#e7edee", "#e7edee")
+percentage <- paste(floor(100*(numer / denom)), "%", sep="")
+f_document_circ <- ggplot(plot_data, aes(x=ring, y=value, fill=group, width=width)) +
+  geom_col(position=position_fill(), fill=color_set) +
+  scale_x_continuous(limits=c(0,max(plot_data$width+plot_data$ring))) +
+  coord_polar(theta="y", direction=-1) +
+  top_performer_theme() +
+  dl_annotate("text", x=10, y=0, label=percentage, size=12, color="#00274C", fontface=2) +
+  dl_annotate("text", x=26, y=.5, label="patients", size=3, color="#00274C") +
+  dl_annotate("text", x=18, y=.5, label=paste(numer, denom, sep="/"), size=4, color="#00274C")
+
+cap_document_circ <- "Women who delivered this quarter receiving prenatal contraceptive counseling"
+@
+
+<< counsel_doc_bars, include=FALSE >>=
+observations <- c("documented-contra-choice","postpartum-contra-counsel")
+
+df <- fmt_data %>% 
+  filter(obs %in% observations, date == max(date)) %>%
+  mutate( percent = 100 * numerator / denominator )
+  
+color_set <- c("#00274C", "#e7edee", "#e7edee")
+
+f_counsel_doc <- ggplot(df, aes(x=payer, y=percent)) +
+  geom_col(aes(fill=obs), position=position_dodge()) +
+  ylab("Women Delivered") +
+  theme(legend.position="bottom", plot.background = element_rect(fill="yellow"),
+        axis.title.x = element_blank())
+@
+
+%\begin{tcolorbox}[breakable,colback=white,colframe=cyan,width=\dimexpr\textwidth+4mm\relax,enlarge left by=-2mm]
+\begin{tcolorbox}[breakable,colback=white,colframe=cyan,width=\dimexpr\textwidth\relax]
+\section*{Women Delivered}
+  \begin{minipage}[b]{0.30\textwidth}
+    \strut\vspace*{-\baselineskip}\newline
+    \parbox{\textwidth}{
+      \centering
+      \textbf{\Huge \Sexpr{total_delivered}}\par
+      {\small Total number of women who delivered this quarter.}
+    }
+  \end{minipage}\hfill%
+  \begin{minipage}[c]{0.65\textwidth}
+    \strut\vspace*{-\baselineskip}\newline
+    << delv_bar, include=TRUE, fig.show='hold', fig.width=6.5, fig.height=3.3, dev='pdf' >>=
+    f_wmn_delv_bar
+    @
+  \end{minipage}
+\end{tcolorbox}
+
+\noindent\framebox[\textwidth][c]{%
+   << counsel_circ, include=TRUE, dev='pdf', out.width='0.2\\textwidth', fig.align='center', fig.show='hold', fig.width=2.5, fig.height=3 >>= 
+   f_counsel_circ
+   f_document_circ
+   @
+   
+ \begin{minipage}[b]{0.40\textwidth}
+   << counsel_bar, include=TRUE, message=FALSE, warning=FALSE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>= 
+   f_counsel_doc
+   @
+ \end{minipage}
+}
+
+\noindent\framebox[\textwidth][c]{%
+  \begin{minipage}[t]{0.40\textwidth}
+    \strut\vspace*{-\baselineskip}\newline
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.40\textwidth}
+    \strut\vspace*{0.1\baselineskip}\newline
+    Tips and Reminders:
+    \begin{itemize}
+    	\item[] lorum ipsum dolor sit amet
+    	\item[] lorum ipsum dolor sit amet
+    	\item[] lorum ipsum dolor sit amet
+    	\item[] lorum ipsum dolor sit amet
+    \end{itemize}
+  \end{minipage}
+}
+
+
+
+
+\end{document}

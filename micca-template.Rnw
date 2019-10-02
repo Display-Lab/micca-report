@@ -4,11 +4,12 @@
 \usepackage{helvet}
 \usepackage{geometry}
 \usepackage{wrapfig}
+\usepackage{caption}
 \usepackage{subcaption}
 \usepackage{tcolorbox}
 \tcbuselibrary{listings,breakable}
 
-%Redefine subfloat as per knitr instructions for using
+%Redefine subfloat as per knitr instructions for using subcaption
 \newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}
 \renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
 
@@ -52,7 +53,6 @@ fmt_data <- raw_data %>%
     month=factor(format(`date`, "%b"), levels=month.abb, ordered = T),
     payer=payer_vals,
     obs=observation_vals)
-#measure_categories <- c("private","medicaid", "other")
 @
 
 <<common_functs, include=FALSE >>=
@@ -66,24 +66,6 @@ dl_annotate <- function(geom, x = NULL, y = NULL, xmin = NULL, xmax = NULL,
   do.call(annotate, args = args_list)
 }
 
-@
-
-\begin{document}
-%\maketitle
-
-<< 'women_delivered', include=FALSE >>=
-df <- fmt_data %>% filter(obs == "delivered") 
-
-f_wmn_delv_bar <- ggplot(df, aes(x=month, y=denominator)) +
-  geom_bar(aes(fill=payer), stat='identity') +
-  ylab("Women Delivered") +
-  theme(legend.position="bottom", plot.background = element_rect(fill="yellow"),
-        axis.title.x = element_blank(), legend.title = element_blank())
-
-total_delivered <- sum(df$denominator)
-@
-
-<< counsel_cir, include=FALSE >>=
 top_performer_theme <- function(){
   theme_classic() +
     theme(axis.line=element_blank(),
@@ -101,6 +83,35 @@ top_performer_theme <- function(){
           plot.margin = unit(c(-.1,-.1,-.1,-.1),"npc") )
 }
 
+single_line_theme <- function(){
+  theme_classic() +
+    theme(axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.text = element_text(color="#00274c"),
+          axis.title.y=element_blank(),
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_rect(fill="orange"),
+          legend.position = "none")
+}
+@
+
+
+<< delv_bar, include=FALSE >>=
+df <- fmt_data %>% filter(obs == "delivered") 
+
+f_wmn_delv_bar <- ggplot(df, aes(x=month, y=denominator)) +
+  geom_bar(aes(fill=payer), stat='identity') +
+  ylab("Women Delivered") +
+  theme(legend.position="bottom", plot.background = element_rect(fill="yellow"),
+        axis.title.x = element_blank(), legend.title = element_blank())
+
+total_delivered <- sum(df$denominator)
+@
+
+<< counsel_cir, include=FALSE >>=
 df <- fmt_data %>% filter(obs == "postpartum-contra-counsel") 
 
 denom <- sum(df$denominator)
@@ -152,6 +163,34 @@ f_document_circ <- ggplot(plot_data, aes(x=ring, y=value, fill=group, width=widt
 cap_document_circ <- "Women who delivered this quarter receiving prenatal contraceptive counseling"
 @
 
+<< contra_cir, include=FALSE >>=
+df <- fmt_data %>% filter(obs == "prov-pref-contra-60-post", date == max(date))
+
+denom <- sum(df$denominator)
+numer <- sum(df$numerator)
+
+plot_data <- data.frame(
+  group = c("background", "performance", "background"),
+  value = c(denom, numer, denom - numer),
+  ring = c(58, 50, 50),
+  width = c(6,16,16)
+)
+
+color_set <- c("#00274C", "#e7edee", "#e7edee")
+percentage <- paste(floor(100*(numer / denom)), "%", sep="")
+f_contra_circ <- ggplot(plot_data, aes(x=ring, y=value, fill=group, width=width)) +
+  geom_col(position=position_fill(), fill=color_set) +
+  scale_x_continuous(limits=c(0,max(plot_data$width+plot_data$ring))) +
+  coord_polar(theta="y", direction=-1) +
+  top_performer_theme() +
+  dl_annotate("text", x=10, y=0, label=percentage, size=12, color="#00274C", fontface=2) +
+  dl_annotate("text", x=26, y=.5, label="patients", size=3, color="#00274C") +
+  dl_annotate("text", x=18, y=.5, label=paste(numer, denom, sep="/"), size=4, color="#00274C")
+
+cap_contra_circ <- "Women who delivered and received a most/moderately effective contraception by 60 days postpartum"
+
+@
+
 << counsel_doc_bars, include=FALSE >>=
 observations <- c("documented-contra-choice","postpartum-contra-counsel")
 
@@ -168,7 +207,29 @@ f_counsel_doc <- ggplot(df, aes(x=payer, y=percent)) +
         axis.title.x = element_blank())
 @
 
-%\begin{tcolorbox}[breakable,colback=white,colframe=cyan,width=\dimexpr\textwidth+4mm\relax,enlarge left by=-2mm]
+<< documented_line, include=FALSE >>=
+df <- fmt_data %>% 
+  filter( obs == "prov-pref-contra-60-post" ) %>%
+  group_by(date) %>%
+  summarize(ratio = sum(numerator) / sum(denominator))
+
+# y axis labels
+breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
+labels_y <- c("20%", "40%", "60%", "80%", "100%")
+
+f_contra_line <- ggplot(data=df, aes(x=date, y=ratio)) +
+  single_line_theme() +
+  geom_line( size=1, lineend="round", color="#00274c") +
+  geom_point(size=2, color="#00274c", fill="#FFFFFF", shape=21, stroke=1.2) +
+  scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
+  scale_x_date(date_labels = "%b", date_breaks = "1 months")
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tcolorbox}[breakable,colback=white,colframe=cyan,width=\dimexpr\textwidth\relax]
 \section*{Women Delivered}
   \begin{minipage}[b]{0.30\textwidth}
@@ -181,25 +242,70 @@ f_counsel_doc <- ggplot(df, aes(x=payer, y=percent)) +
   \end{minipage}\hfill%
   \begin{minipage}[c]{0.65\textwidth}
     \strut\vspace*{-\baselineskip}\newline
-    << delv_bar, include=TRUE, fig.show='hold', fig.width=6.5, fig.height=3.3, dev='pdf' >>=
+    << women_delivered, include=TRUE, fig.show='hold', fig.width=6.5, fig.height=3.3, dev='pdf' >>=
     f_wmn_delv_bar
     @
   \end{minipage}
 \end{tcolorbox}
 
-\noindent\framebox[\textwidth][c]{%
-   << counsel_circ, include=TRUE, dev='pdf', out.width='0.2\\textwidth', fig.align='center', fig.show='hold', fig.width=2.5, fig.height=3 >>= 
-   f_counsel_circ
-   f_document_circ
-   @
-   
- \begin{minipage}[b]{0.40\textwidth}
-   << counsel_bar, include=TRUE, message=FALSE, warning=FALSE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>= 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=green,width=\dimexpr\textwidth\relax]
+\section*{Counseling Documentation and Contraceptive Choice}
+  \centering
+  \begin{minipage}[c]{0.23\textwidth}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \captionsetup{margin=1cm}
+    \centering
+    << women_counseled, include=TRUE, dev='pdf', out.width='0.9\\textwidth', fig.align='center', fig.show='hold', fig.width=2.5, fig.height=3 >>= 
+    f_counsel_circ
+    @
+    \captionof*{figure}{\tiny{Women who delivered this quarter received prenatal contraceptive counselling}}
+
+  \end{minipage}
+  \begin{minipage}[c]{0.23\textwidth}
+    \captionsetup{margin=1cm}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    << choice_docd, include=TRUE, dev='pdf', out.width='0.9\\textwidth', fig.align='center', fig.show='hold', fig.width=2.5, fig.height=3 >>= 
+    f_document_circ
+    @
+    \captionof*{figure}{\tiny{Documentation of contraceptive choice this quarter}}
+  \end{minipage}
+  \hfill
+ \begin{minipage}[c]{0.5\textwidth}
+   << cousel_and_doc, include=TRUE, message=FALSE, warning=FALSE, fig.show='hold', fig.width=5, fig.height=3, dev='pdf' >>= 
    f_counsel_doc
    @
  \end{minipage}
-}
+\end{tcolorbox}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=orange,width=\dimexpr\textwidth\relax]
+\section*{Postpartum Contraceptive Care Utilization}
+  \centering
+  \begin{minipage}[c]{0.35\textwidth}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    << contra_total, include=TRUE, dev='pdf', out.width='0.9\\textwidth', fig.align='center', fig.show='hold', fig.width=2.5, fig.height=3 >>= 
+    f_contra_circ
+    @
+    \captionof*{figure}{\centering\small{\Sexpr{cap_contra_circ}}}
+
+  \end{minipage}
+  \begin{minipage}[c]{0.55\textwidth}
+    \captionsetup{margin=1cm}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    << contra_over_time, include=TRUE, dev='pdf', out.width='0.9\\textwidth', fig.align='center', fig.show='hold', fig.width=5, fig.height=3.5 >>= 
+    f_contra_line
+    @
+  \end{minipage}
+\end{tcolorbox}
+
+\newpage
+\FloatBarrier
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent\framebox[\textwidth][c]{%
   \begin{minipage}[t]{0.40\textwidth}
     \strut\vspace*{-\baselineskip}\newline

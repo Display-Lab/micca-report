@@ -29,10 +29,12 @@
 }
 
 % Set the Paper Size and margins
+%  10.5 inches vertical per page is ~26 cm.  So 8.5 cm high per box
+%  8 inches horizontal is ~20 cm.  So 10 cm wide per box.
+%  image dims width=9cm height=7cm
+%  image dims max: width=9.5 height=7.5
 \geometry{margin=0.25in}
 
-% 10.5 inches vertical per page is ~26 cm.  So 8.5 cm high per box
-% 8 inches horizontal is ~20 cm.  So 10 cm wide per box.
 
 \setlength\parindent{0pt}
 
@@ -56,13 +58,13 @@
   \makebox[\linewidth]{}
   % mark the bottom of the box with  rule for visual debuggin
   \rule{\linewidth}{2pt}
-\end{minipage}%
+\end{minipage}\hfill
 \begin{minipage}[t][0.32\textheight][t]{0.49\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  \includegraphics[width=0.5\linewidth]{example-image-a}
+  \includegraphics[width=9.5cm,height=7.5cm]{example-image-a}
   \captionof*{figure}{\centering\small{Box2 Caption}}
   \vfill
   \makebox[\linewidth]{}

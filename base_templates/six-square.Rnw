@@ -67,8 +67,10 @@ Maximum
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
+  % Configure caption
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  % include centered image
   \centering
   \includegraphics[width=0.9\linewidth]{example-image-a}
   \captionof*{figure}{\centering\small{Box1 Caption}}
@@ -77,7 +79,7 @@ Maximum
   % mark the bottom of the box with  rule for visual debugging
   % otherwise use makebox to provide filler: \makebox[\linewidth]{}
   \rule{\linewidth}{2pt}
-\end{minipage}
+\end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
@@ -103,7 +105,7 @@ Maximum
   \captionof*{figure}{\centering\small{Box3 Caption}}
   \vfill
   \makebox[\linewidth]{}
-\end{minipage}
+\end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
@@ -129,7 +131,7 @@ Maximum
   \captionof*{figure}{\centering\small{Box5 Caption}}
   \vfill
   \makebox[\linewidth]{}
-\end{minipage}
+\end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}

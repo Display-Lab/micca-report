@@ -1,0 +1,108 @@
+\documentclass[letterpaper, 12pt]{article}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{helvet}
+\usepackage{geometry}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+\usepackage{showframe} %% just to show frames.
+
+\tcbuselibrary{listings,breakable}
+
+%Redefine subfloat as per knitr instructions for using subcaption
+\newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+
+\newcommand\decorativeline[1][1pt]{
+	\par\noindent%
+	\rule[0.5ex]{\linewidth}{#1}\par
+}
+
+ % an empty environment to be redefined in TeX
+\newenvironment{manualout}{}{}
+
+% box to help with visual debugging
+\newcommand\mybox[1]{%
+  \setlength\fboxsep{0pt}\fcolorbox{red}{white}{#1}
+}
+
+% Set the Paper Size and margins
+\geometry{margin=0.25in}
+
+% 10.5 inches vertical per page is ~26 cm.  So 8.5 cm high per box
+% 8 inches horizontal is ~20 cm.  So 10 cm wide per box.
+
+\title{Six Boxes}
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TOP %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=orange,width=\dimexpr\textwidth\relax]
+\section*{Rectangle at the Top}
+  \centering
+  \begin{minipage}[c]{0.49\textwidth}
+    \captionsetup{margin=.5cm}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    \includegraphics[width=.9\linewidth]{example-image-a}
+    \captionof*{figure}{\centering\small{Image A Caption}}
+  \end{minipage}
+  \begin{minipage}[c]{0.49\textwidth}
+    \captionsetup{margin=.5cm}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    \includegraphics[width=.9\linewidth]{example-image-b}
+    \captionof*{figure}{\centering\small{Image B Caption}}
+  \end{minipage}
+\end{tcolorbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MIDDLE %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=orange,width=\dimexpr\textwidth\relax]
+\section*{Rectangle in the Middle}
+  \centering
+  \begin{minipage}[c]{0.49\textwidth}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    %\centering
+    No Graphics here.  Just a block of text.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  \end{minipage}
+  \begin{minipage}[c]{0.49\textwidth}
+    \captionsetup{margin=1cm}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    \includegraphics[width=.9\linewidth]{example-image-b}
+    \captionof*{figure}{\centering\small{Image B Caption}}
+  \end{minipage}
+\end{tcolorbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BOTTOM %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=orange,width=\dimexpr\textwidth\relax]
+\section*{Rectangle at the Bottom}
+  \centering
+  \begin{minipage}[c]{0.49\textwidth}
+    \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+    \centering
+    \includegraphics[width=.9\linewidth]{example-image-a}
+    \captionof*{figure}{\centering\small{Image A Caption}}
+
+  \end{minipage}
+  \begin{minipage}[c]{0.49\textwidth}
+    % placeholder empty box
+    \makebox[\linewidth]{}
+  \end{minipage}
+\end{tcolorbox}
+
+\end{document}

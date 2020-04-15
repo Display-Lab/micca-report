@@ -1,0 +1,150 @@
+\documentclass[letterpaper, 12pt]{article}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{helvet}
+\usepackage{geometry}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+
+\usepackage{showframe} % debugging visually by showing frames.
+
+\tcbuselibrary{listings,breakable}
+
+% box to help with visual debugging
+\newcommand\mybox[1]{%
+  \setlength\fboxsep{0pt}\fcolorbox{red}{white}{#1}
+}
+
+% Redefine subfloat as per knitr instructions for using subcaption
+\newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}
+
+% Only if the base font of the document is to be sans serif
+\renewcommand*\familydefault{\sfdefault} 
+
+% Define a decorative line
+\newcommand\decorativeline[1][1pt]{
+	\par\noindent%
+	\rule[0.5ex]{\linewidth}{#1}\par
+}
+
+ % an empty environment to be redefined in TeX
+\newenvironment{manualout}{}{}
+
+% Set the Paper Size and margins
+%  10.5 inches vertical per page is ~26 cm.  So 8.5 cm high per box
+%  8 inches horizontal is ~20 cm.  So 10 cm wide per box.
+\geometry{margin=0.25in}
+
+% Avoid indenting minipages
+\setlength\parindent{0pt}
+
+<<preflight, include=FALSE>>=
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+@
+
+\title{MICCA Report: XYZ Hospital Jan - Apr 2020}
+\begin{document}
+
+% Turn off top skip so minpages can sit bottom to top without a skip between
+\hbox{}\kern-\topskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{minipage}[t][0.07\textheight][t]{\textwidth}
+\centering
+TITLE TEXT
+
+Gets 
+
+Four Lines
+
+Maximum
+\end{minipage}
+
+\nointerlineskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TOP %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  % Add strut to top of minipage to provide alignment baseline
+  \strut\vspace*{-\baselineskip}\newline
+  % Configure caption
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  % include centered image
+  \centering
+  \includegraphics[width=0.9\linewidth]{example-image-a}
+  \captionof*{figure}{\centering\small{Box1 Caption}}
+  % placeholder for vertical and horizontal fill
+  \vfill
+  % mark the bottom of the box with  rule for visual debugging
+  % otherwise use makebox to provide filler: \makebox[\linewidth]{}
+  \rule{\linewidth}{2pt}
+\end{minipage}\hfill
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \includegraphics[width=\linewidth]{example-image-a}
+  \captionof*{figure}{\centering\small{Box2 Caption}}
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+
+\nointerlineskip
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MIDDLE %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \includegraphics[width=.9\linewidth]{example-image-b}
+  \captionof*{figure}{\centering\small{Box3 Caption}}
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}\hfill
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \includegraphics[width=.9\linewidth]{example-image-b}
+  \captionof*{figure}{\centering\small{Box4 Caption}}
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+
+\nointerlineskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BOTTOM %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \includegraphics[width=.9\linewidth]{example-image-c}
+  \captionof*{figure}{\centering\small{Box5 Caption}}
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}\hfill
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \includegraphics[width=.9\linewidth]{example-image-c}
+  \captionof*{figure}{\centering\small{Box5 Caption}}
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+
+\end{document}

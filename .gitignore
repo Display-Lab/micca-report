@@ -9,5 +9,7 @@
 .Rproj.user/*
 *tikzDictionary
 
+data/*
+
 
 .Rproj.user

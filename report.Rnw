@@ -8,7 +8,7 @@
 \usepackage{subcaption}
 \usepackage{tcolorbox}
 
-\usepackage{showframe} % debugging visually by showing frames.
+%\usepackage{showframe} % debugging visually by showing frames.
 
 \tcbuselibrary{listings,breakable}
 
@@ -35,6 +35,7 @@
 % Set the Paper Size and margins
 %  10.5 inches vertical per page is ~26 cm.  So 8.5 cm high per box
 %  8 inches horizontal is ~20 cm.  So 10 cm wide per box.
+% Figures should be 10 cm wide by 8.5 cm tall
 \geometry{margin=0.25in}
 
 % Avoid indenting minipages
@@ -42,9 +43,11 @@
 
 <<preflight, include=FALSE>>=
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+# Work around for "xcolor Warning: Incompatible color definition"
+knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
 @
 
-\title{MICCA Report: XYZ Hospital Jan - Apr 2020}
+\title{MICCA Report}
 \begin{document}
 
 % Turn off top skip so minpages can sit bottom to top without a skip between
@@ -55,13 +58,7 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.07\textheight][t]{\textwidth}
 \centering
-TITLE TEXT
-
-Gets 
-
-Four Lines
-
-Maximum
+\Huge XYZ Hospital Jan - Apr 2020
 \end{minipage}
 
 \nointerlineskip
@@ -71,26 +68,28 @@ Maximum
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
-  % Configure caption
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
-  % include centered image
-  \centering
-  \includegraphics[width=0.9\linewidth]{example-image-a}
-  \captionof*{figure}{\centering\small{Box1 Caption}}
-  % placeholder for vertical and horizontal fill
+  
+  % content
+   \parbox{\textwidth}{
+    \centering
+    \vspace{10mm}
+    \textbf{\Huge \Sexpr{m14_sum}}\par
+    \vspace{2mm}
+    {\small Women in aged 15 -- 44 who had a live birth}\par
+  }
+  % lower filler
   \vfill
-  % mark the bottom of the box with  rule for visual debugging
-  % otherwise use makebox to provide filler: \makebox[\linewidth]{}
-  \rule{\linewidth}{2pt}
+  \makebox[\linewidth]{}
 \end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  \includegraphics[width=\linewidth]{example-image-a}
-  \captionof*{figure}{\centering\small{Box2 Caption}}
+  
+    << top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    fig_top_right
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
@@ -105,8 +104,10 @@ Maximum
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  \includegraphics[width=.9\linewidth]{example-image-b}
-  \captionof*{figure}{\centering\small{Box3 Caption}}
+  Overall Immediate PP Contraception Rate\\
+    << mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
+     fig_mid_left
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
@@ -115,8 +116,10 @@ Maximum
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  \includegraphics[width=.9\linewidth]{example-image-b}
-  \captionof*{figure}{\centering\small{Box4 Caption}}
+  Immediate PP Contraception Rate by Month
+    << mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    fig_mid_right
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
@@ -131,8 +134,11 @@ Maximum
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  \includegraphics[width=.9\linewidth]{example-image-c}
-  \captionof*{figure}{\centering\small{Box5 Caption}}
+  Immediate LARC\\
+  \vspace{2mm}
+    << bot-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
+     fig_bot_left
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
@@ -141,8 +147,10 @@ Maximum
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  \includegraphics[width=.9\linewidth]{example-image-c}
-  \captionof*{figure}{\centering\small{Box5 Caption}}
+  LARC Provision Breakdown by Payer\\
+    << bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    fig_bot_right
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}

@@ -22,6 +22,8 @@ read_hurley_data <- function(filename){
 }
 
 normalize_hurley_data <- function(raw_data){
+  
+  # ASSUME: D7 larc_prov is "4-60 at PP visit" for "4-60 days"
   # Clean input data.
   #  Currently unused: choice_date = ymd(base::strptime(choice_date, format="%Y-%m-%d")),
   raw_data %>% 
@@ -31,6 +33,7 @@ normalize_hurley_data <- function(raw_data){
       imm_method      = recode(.x=imm_method, "none during delivery admission"="None"),
       contra_prov     = sub("(\\d)days","\\1 days",contra_prov),
       larc_prov       = sub("(\\d)days","\\1 days",larc_prov),
+      larc_prov       = ifelse(larc_prov == "4-60 days", "4-60 at PP visit", larc_prov),
       payer           = sub(pattern = "-.*$", replacement = "", payer),
       institution = "Hurley" ) %>%
     filter(payer %in% c("Private", "Medicaid", "Other"))
@@ -99,19 +102,27 @@ calculate_measures <- function(component_data){
 # Read raw data
 jan_raw <- read_hurley_data('data/hurley_2020-01.csv')
 feb_raw <- read_hurley_data('data/hurley_2020-02.csv')
+mar_raw <- read_hurley_data('data/hurley_2020-03.csv')
+
 
 # Normalize data
 jan_data <- normalize_hurley_data(jan_raw)
 feb_data <- normalize_hurley_data(feb_raw)
+mar_data <- normalize_hurley_data(mar_raw)
+
+# combine and emit normalized data for future reference by hurley
+norm_data <-  bind_rows(jan_data, feb_data, mar_data)
+write_csv(maptg, "hurley_2020_Q1.csv")
 
 # Calc measures components by delivery month and payer
 jan_comp <- calculate_hurley_components(jan_data)
 feb_comp <- calculate_hurley_components(feb_data)
+mar_comp <- calculate_hurley_components(mar_data)
 
 # Consolidate components from each month
 #  Problem binding yearqtr columns together.  Information is lost
 #  Related to: https://github.com/tidyverse/dplyr/issues/2457
-comp_data <- bind_rows(jan_comp, feb_comp)
+comp_data <- bind_rows(jan_comp, feb_comp, mar_comp)
 
 # calculate measures from components
 measure_data <- calculate_measures(comp_data)
@@ -122,5 +133,5 @@ maptg <- measure_data %>%
   add_column(ascribee="Hurley", .before=1)
 
 # Emit cleaned data to file
-write_csv(maptg, "maptg_hurley_2020Q1.csv")
+write_csv(maptg, "maptg_hurley_2020_Q1.csv")
 

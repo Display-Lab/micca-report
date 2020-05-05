@@ -123,8 +123,7 @@ plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
 
 plot_data <- maptg_data %>% 
   select(-group) %>%
-  filter(measure == "M1" | measure == "M2",
-         ascribee == RECIP) %>%
+  filter(measure == "M1", ascribee == RECIP) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
     denominator = sum(unique(denominator), na.rm=TRUE),
@@ -142,15 +141,16 @@ fig_mid_left <-ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=wid
   scale_x_continuous(limits=c(0,75)) +
   coord_polar(theta="y", direction=-1) +
   dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_BLUE, fontface=2) +
-  dl_annotate("text", x=8, y=0, label="M1 + M2", size=2.5, color=DL_BLUE) +
+  dl_annotate("text", x=8, y=0, label="Measure 1", size=2.5, color=DL_BLUE) +
   dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
               size=4, color=DL_BLUE) +
   top_performer_theme()
 
 #### MID RIGHT
+# title
 plot_data <- maptg_data %>% 
   select(-group) %>%
-  filter(measure == "M1" | measure == "M2") %>%
+  filter(measure == "M1") %>%
   group_by(ascribee,time) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
@@ -161,7 +161,9 @@ plot_data <- maptg_data %>%
     perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
     arrow = as.factor(ifelse(recipient, "show", "noshow")),
     pcolor = ifelse(recipient, DL_BLUE, DL_GRAY)
-    ) 
+    ) %>%
+  ggtitle("Measure 1")
+
 plot_data
 
 # y axis labels

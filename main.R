@@ -249,7 +249,7 @@ p2_fig_top_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) 
 
 #### PAGE2: MID LEFT
 
-p2_table_data <- maptg_data %>% 
+p2_tbl_mid_left <- maptg_data %>% 
   filter(ascribee == RECIP,
          measure %in% c("M10", "M11","M12","M13")) %>%
   group_by(measure) %>%
@@ -259,6 +259,26 @@ p2_table_data <- maptg_data %>%
     rate = numerator/denominator)
 
 #### PAGE2: MID RIGHT
+
+# Preference of LARC by payer
+# iud, nexplanon, pptl rate is y-axis stacked
+# payer is x axis
+
+plot_data <- maptg_data %>% 
+  filter(ascribee == RECIP,
+         measure %in% c("M10", "M11","M12","M13"))  %>%
+  group_by(group, measure) %>%
+  summarize(numerator = sum(numerator),
+            denominator = sum(unique(denominator))) %>%
+  mutate(rate = numerator/denominator)
+
+p2_fig_mid_right <- ggplot(plot_data, aes(x=group, y=rate)) +
+  geom_bar(aes(fill=measure), stat='identity', color=DL_BLUE) +
+  ylab("% of Women with Documented Choice") +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  theme_minimal() +
+  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank())  +
+  ggtitle("Measures 10,11,12,13")
 
 ###################
 # Generate Report #

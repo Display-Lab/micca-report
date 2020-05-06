@@ -5,6 +5,7 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 library(tidyr)
+library(kableExtra)
 
 ####################
 # Common Functions #
@@ -46,6 +47,39 @@ single_line_theme <- function(){
           panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),
           legend.position = "none")
+}
+
+# Common Circle Plot
+circle_plot <- function(maptg_data, measure_id, middle_label="" ){
+  plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
+                           ring=c(50,50,58),
+                           width=c(16,16,6),
+                           fill_color=c(DL_BLUE, DL_LIGHT_BORDER, DL_LIGHT_BORDER))
+  
+  plot_data <- maptg_data %>% 
+    select(-group) %>%
+    filter(measure == measure_id, ascribee == RECIP) %>%
+    summarize(
+      numerator = sum(numerator, na.rm=TRUE),
+      denominator = sum(unique(denominator), na.rm=TRUE),
+      gap = denominator - numerator) %>%
+    pivot_longer(cols=c("denominator","numerator", "gap"), names_to = "obs", values_to = "value") %>%
+    left_join(plotting_attrs)
+  
+  numer <- plot_data %>% filter(obs=="numerator") %>% pull(value)
+  denom <- plot_data %>% filter(obs=="denominator") %>% pull(value)
+  perf_label <- paste(floor(100*numer/denom), "%",sep="")
+    
+  fig_mid_left <-ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
+    geom_col() +
+    scale_fill_identity() +
+    scale_x_continuous(limits=c(0,75)) +
+    coord_polar(theta="y", direction=-1) +
+    dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_BLUE, fontface=2) +
+    dl_annotate("text", x=8, y=0, label=middle_label, size=2.5, color=DL_BLUE) +
+    dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
+                size=4, color=DL_BLUE) +
+    top_performer_theme()
 }
 
 ######################
@@ -90,7 +124,7 @@ DL_GRAY         <- "#878A8F"
 
 RECIP <- "Hurley"
 
-#### TOP LEFT
+#### PAGE1: TOP LEFT
 # Sum measures across groups for women delivered
 m14_sum <- maptg_data %>% filter(measure == "M14") %>% pull(numerator) %>% sum()
 
@@ -102,51 +136,22 @@ plot_data <- maptg_data %>%
   mutate(denominator = sum(numerator),
          payer_rate = numerator/denominator)
 
-fig_top_right <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
+p1_fig_top_right <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   geom_bar(aes(fill=group), stat='identity', color=DL_BLUE) +
   scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
   ylab("% Women Delivered") +
   scale_y_continuous(labels=scales::percent) +
   scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
   theme_minimal() +
-  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) 
+  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) +
+  ggtitle("Measure 14")
 
-#### MID LEFT
+#### PAGE1: MID LEFT
 # circle
 # M1	Provision 3 PP
-# M2	Provision 60 PP
+p1_fig_mid_left <- circle_plot(maptg_data, "M1", "Measure 1")
 
-plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
-                         ring=c(50,50,58),
-                         width=c(16,16,6),
-                         fill_color=c(DL_BLUE, DL_LIGHT_BORDER, DL_LIGHT_BORDER))
-
-plot_data <- maptg_data %>% 
-  select(-group) %>%
-  filter(measure == "M1", ascribee == RECIP) %>%
-  summarize(
-    numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(unique(denominator), na.rm=TRUE),
-    gap = denominator - numerator) %>%
-  pivot_longer(cols=c("denominator","numerator", "gap"), names_to = "obs", values_to = "value") %>%
-  left_join(plotting_attrs)
-
-numer <- plot_data %>% filter(obs=="numerator") %>% pull(value)
-denom <- plot_data %>% filter(obs=="denominator") %>% pull(value)
-perf_label <- paste(floor(100*numer/denom), "%",sep="")
-  
-fig_mid_left <-ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
-  geom_col() +
-  scale_fill_identity() +
-  scale_x_continuous(limits=c(0,75)) +
-  coord_polar(theta="y", direction=-1) +
-  dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_BLUE, fontface=2) +
-  dl_annotate("text", x=8, y=0, label="Measure 1", size=2.5, color=DL_BLUE) +
-  dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
-              size=4, color=DL_BLUE) +
-  top_performer_theme()
-
-#### MID RIGHT
+#### PAGE1: MID RIGHT
 # title
 plot_data <- maptg_data %>% 
   select(-group) %>%
@@ -161,16 +166,13 @@ plot_data <- maptg_data %>%
     perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
     arrow = as.factor(ifelse(recipient, "show", "noshow")),
     pcolor = ifelse(recipient, DL_BLUE, DL_GRAY)
-    ) %>%
-  ggtitle("Measure 1")
-
-plot_data
+    ) 
 
 # y axis labels
 breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
 labels_y <- c("20%", "40%", "60%", "80%", "100%")
   
-fig_mid_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+p1_fig_mid_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
   geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_BLUE) +
   geom_line(size=1, lineend="round") +
   geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
@@ -182,42 +184,13 @@ fig_mid_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
   single_line_theme() +
   scale_color_manual(labels = plot_data$ascribee, 
                      values = plot_data$pcolor, guide = guide_legend(title=NULL)) +
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  ggtitle("Measure 1")
 
-#### BOTTOM LEFT
-plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
-                         ring=c(50,50,58),
-                         width=c(20,20,10),
-                         fill_color=c(DL_BLUE, DL_LIGHT_BORDER, DL_LIGHT_BORDER))
+#### PAGE1: BOTTOM LEFT
+p1_fig_bot_left <- circle_plot(maptg_data, "M3", "Measure 3")
 
-plot_data <- maptg_data %>% 
-  select(-group) %>%
-  filter(measure == "M3" | measure == "M4",
-         ascribee == RECIP) %>%
-  summarize(
-    numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(unique(denominator), na.rm=TRUE),
-    gap = denominator - numerator) %>%
-    pivot_longer(cols=c("denominator","numerator", "gap"), names_to = "obs", values_to = "value") %>%
-  left_join(plotting_attrs)
-
-numer <- plot_data %>% filter(obs=="numerator") %>% pull(value)
-denom <- plot_data %>% filter(obs=="denominator") %>% pull(value)
-perf_label <- paste(floor(100*numer/denom), "%",sep="")
-  
-fig_bot_left <-ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
-  geom_col() +
-  scale_fill_identity() +
-  scale_x_continuous(limits=c(0,75)) +
-  coord_polar(theta="y", direction=-1) +
-  dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_BLUE, fontface=2) +
-  dl_annotate("text", x=8, y=0, label="", size=5, color=DL_BLUE) +
-  dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
-              size=4, color=DL_BLUE) +
-  top_performer_theme() 
-
-
-### BOTTOM RIGHT
+### PAGE1: BOTTOM RIGHT
 plot_data <- maptg_data %>% 
   filter(measure %in% c("M3","M4")) %>%
   group_by(ascribee, group) %>%
@@ -225,13 +198,67 @@ plot_data <- maptg_data %>%
             denominator = sum(pull(., numerator)))%>%
   mutate(rate = numerator/denominator)
 
-fig_bot_right <- ggplot(plot_data, aes(x=group, y=rate)) +
+p1_fig_bot_right <- ggplot(plot_data, aes(x=group, y=rate)) +
   geom_bar(aes(fill=group), stat='identity', color=DL_BLUE) +
   ylab("% of LARC Provided") +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
   scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
   theme_minimal() +
-  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) 
+  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank())  +
+  ggtitle("Measure 3 + 4")
+
+#### PAGE2: TOP LEFT
+p2_fig_top_left <- circle_plot(maptg_data, "M5", "Measure 5")
+
+#### PAGE2: TOP RIGHT
+
+# title
+plot_data <- maptg_data %>% 
+  select(-group) %>%
+  filter(measure == "M5") %>%
+  group_by(ascribee,time) %>%
+  summarize(
+    numerator = sum(numerator, na.rm=TRUE),
+    denominator = sum(unique(denominator), na.rm=TRUE),
+    rate = numerator/denominator) %>%
+  mutate(
+    recipient = ifelse(ascribee == RECIP, T, F),
+    perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
+    arrow = as.factor(ifelse(recipient, "show", "noshow")),
+    pcolor = ifelse(recipient, DL_BLUE, DL_GRAY)
+    ) 
+
+# y axis labels
+breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
+labels_y <- c("20%", "40%", "60%", "80%", "100%")
+  
+p2_fig_top_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_BLUE) +
+  geom_line(size=1, lineend="round") +
+  geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
+  scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
+  scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
+  scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
+  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_BLUE,
+             color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
+  single_line_theme() +
+  scale_color_manual(labels = plot_data$ascribee, 
+                     values = plot_data$pcolor, guide = guide_legend(title=NULL)) +
+  theme(legend.position="bottom") +
+  ggtitle("Measure 5")
+
+#### PAGE2: MID LEFT
+
+p2_table_data <- maptg_data %>% 
+  filter(ascribee == RECIP,
+         measure %in% c("M10", "M11","M12","M13")) %>%
+  group_by(measure) %>%
+  summarize(
+    numerator = sum(numerator, na.rm=TRUE),
+    denominator = sum(unique(denominator), na.rm=TRUE),
+    rate = numerator/denominator)
+
+#### PAGE2: MID RIGHT
 
 ###################
 # Generate Report #

@@ -8,7 +8,24 @@
 \usepackage{subcaption}
 \usepackage{tcolorbox}
 
-%\usepackage{showframe} % debugging visually by showing frames.
+% Kable requirements
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\usepackage{showframe} % debugging visually by showing frames.
+\usepackage{tcolorbox} % dubugging with colorful boxes
 
 \tcbuselibrary{listings,breakable}
 
@@ -63,7 +80,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 
 \nointerlineskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% TOP %
+% PAGE 1: TOP %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   % Add strut to top of minipage to provide alignment baseline
@@ -76,6 +93,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
     \textbf{\Huge \Sexpr{m14_sum}}\par
     \vspace{2mm}
     {\small Women in aged 15 -- 44 who had a live birth}\par
+    {\tiny Measure 14}\par
   }
   % lower filler
   \vfill
@@ -86,9 +104,9 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  
-    << top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    fig_top_right
+  Payer Proportion of Deliveries
+    << p1-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    p1_fig_top_right
     @
   \vfill
   \makebox[\linewidth]{}
@@ -97,7 +115,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 \nointerlineskip
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% MIDDLE %
+% PAGE 1: MIDDLE %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
@@ -105,8 +123,8 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
   Overall Immediate PP Contraception Rate\\
-    << mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     fig_mid_left
+    << p1-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
+     p1_fig_mid_left
     @
   \vfill
   \makebox[\linewidth]{}
@@ -117,8 +135,8 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
   Immediate PP Contraception Rate by Month
-    << mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    fig_mid_right
+    << p1-mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    p1_fig_mid_right
     @
   \vfill
   \makebox[\linewidth]{}
@@ -127,7 +145,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 \nointerlineskip
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% BOTTOM %
+% PAGE 1: BOTTOM %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
@@ -136,8 +154,8 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \centering
   Immediate LARC\\
   \vspace{2mm}
-    << bot-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     fig_bot_left
+    << p1-bot-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
+     p1_fig_bot_left
     @
   \vfill
   \makebox[\linewidth]{}
@@ -148,9 +166,90 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
   LARC Provision Breakdown by Payer\\
-    << bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    fig_bot_right
+    << p1-bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    p1_fig_bot_right
     @
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+
+\newpage
+\FloatBarrier
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PAGE 2: TOP %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  % Add strut to top of minipage to provide alignment baseline
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  Counseling Rate\\
+  \vspace{2mm}
+    << p2-top-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
+     p2_fig_top_left
+    @
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}\hfill
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+    << p2-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+     p2_fig_top_right
+    @
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PAGE 2: MIDDLE %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\begin{minipage}[t][0.50\textheight][t]{0.9\textwidth}
+  % Add strut to top of minipage to provide alignment baseline
+  %\strut\vspace*{-\baselineskip}\newline
+  \begin{minipage}{0.3\textwidth}
+  <<m10m13_table, include=TRUE, message=FALSE, echo=FALSE>>=
+    title <- "Long Acting Contraceptive"
+    knitr::kable(diag(2), format="latex", caption="foo") # %>% kable_styling(latex_options="hold_position")
+  @
+  \end{minipage}
+%  \centering
+%  \vfill
+%  \makebox[\linewidth]{}
+%\end{minipage}%\hfill
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PAGE 2: BOTTOM %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nointerlineskip
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  % Add strut to top of minipage to provide alignment baseline
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}\hfill
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \captionsetup{margin=.5cm}
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \centering
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}

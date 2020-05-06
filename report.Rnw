@@ -213,35 +213,57 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 %\begin{minipage}[t][0.50\textheight][t]{0.9\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   %\strut\vspace*{-\baselineskip}\newline
-  \begin{minipage}{0.3\textwidth}
-  <<m10m13_table, include=TRUE, message=FALSE, echo=FALSE>>=
+  <<m10m13_table, include=FALSE, message=FALSE, echo=FALSE>>=
     title <- "Long Acting Contraceptive"
     knitr::kable(diag(2), format="latex", caption="foo") # %>% kable_styling(latex_options="hold_position")
   @
-  \end{minipage}
-%  \centering
-%  \vfill
-%  \makebox[\linewidth]{}
-%\end{minipage}%\hfill
+  
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
-  \centering
+  << k1, include=TRUE, message=FALSE, echo=FALSE>>=
+    df <- data.frame(measure=c("FooBar", "Bazque", "Glorb"), numerator=c(10,100,1000), denominator=c(20,200,2000))
+    knitr::kable(df, format = "latex")
+  @
+  \vfill
+  \makebox[\linewidth]{}
+\end{minipage}
+\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  << k2, include=TRUE, message=FALSE, echo=FALSE>>=
+    knitr::kable(p2_table_data, format = "latex")
+  @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
 
+%  \centering
+%  \vfill
+%  \makebox[\linewidth]{}
+%\end{minipage}%\hfill
+%\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+%  \strut\vspace*{-\baselineskip}\newline
+%  \captionsetup{margin=.5cm}
+%  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+%  \centering
+%  \vfill
+%  \makebox[\linewidth]{}
+%\end{minipage}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PAGE 2: BOTTOM %
+% PAGE 2: DEBUGGING BOTTOM.  DUPE OF TOP %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\nointerlineskip
+
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
+  Counseling Rate\\
+  \vspace{2mm}
+    << dbg1, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
+     p2_fig_top_left
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
@@ -250,8 +272,34 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
+    << dbg2, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+     p2_fig_top_right
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PAGE 2: BOTTOM %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\nointerlineskip
+%\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+%  % Add strut to top of minipage to provide alignment baseline
+%  \strut\vspace*{-\baselineskip}\newline
+%  \captionsetup{margin=.5cm}
+%  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+%  \centering
+%  \vfill
+%  \makebox[\linewidth]{}
+%\end{minipage}\hfill
+%\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+%  \strut\vspace*{-\baselineskip}\newline
+%  \captionsetup{margin=.5cm}
+%  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+%  \centering
+%  \vfill
+%  \makebox[\linewidth]{}
+%\end{minipage}
 
 \end{document}

@@ -192,7 +192,7 @@ p1_fig_bot_left <- circle_plot(maptg_data, "M3", "Measure 3")
 
 ### PAGE1: BOTTOM RIGHT
 plot_data <- maptg_data %>% 
-  filter(measure %in% c("M3","M4")) %>%
+  filter(measure == "M3") %>%
   group_by(ascribee, group) %>%
   summarize(numerator = sum(numerator),
             denominator = sum(pull(., numerator)))%>%
@@ -200,12 +200,12 @@ plot_data <- maptg_data %>%
 
 p1_fig_bot_right <- ggplot(plot_data, aes(x=group, y=rate)) +
   geom_bar(aes(fill=group), stat='identity', color=DL_BLUE) +
-  ylab("% of LARC Provided") +
+  ylab("% of Immediate LARC Provided") +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
   scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
   theme_minimal() +
   theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank())  +
-  ggtitle("Measure 3 + 4")
+  ggtitle("Measure 3")
 
 #### PAGE2: TOP LEFT
 p2_fig_top_left <- circle_plot(maptg_data, "M5", "Measure 5")
@@ -258,12 +258,11 @@ p2_tbl_mid_left <- maptg_data %>%
     denominator = sum(unique(denominator), na.rm=TRUE),
     rate = numerator/denominator)
 
+p2_tbl_mid_left %>% pull(rate) %>% sum
+
 #### PAGE2: MID RIGHT
-
 # Preference of LARC by payer
-# iud, nexplanon, pptl rate is y-axis stacked
-# payer is x axis
-
+# miscalculated denominators? no.  These measures do not account for "none" as a choice.
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
          measure %in% c("M10", "M11","M12","M13"))  %>%

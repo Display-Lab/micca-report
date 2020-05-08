@@ -22,16 +22,17 @@ read_hurley_data <- function(filename){
 }
 
 normalize_hurley_data <- function(raw_data){
-  
   # ASSUME: D7 larc_prov is "4-60 at pp visit" for "4-60 days"
   # Enforce choice: immediate PP IUD, immediate PP Nexplanon, PPTL, other, none, unknown
-    # 
-  # Clean input data.
+  # Correct "Unkown" to "unknown"
+  # Recode choice to unknown for counseling == FALSE
   #  Currently unused: choice_date = ymd(base::strptime(choice_date, format="%Y-%m-%d")),
   raw_data %>% 
     filter(!is.na(mrn))  %>%
     mutate(
       counseling      = ifelse(counseling == 'Yes', TRUE, FALSE),
+      contra_choice   = ifelse(contra_choice == "Unkown", "unknown", contra_choice),
+      contra_choice   = ifelse(counseling, contra_choice, "unknown"),
       imm_method      = recode(.x=imm_method, "none during delivery admission"="none"),
       contra_prov     = sub("(\\d)days","\\1 days",contra_prov),
       larc_prov       = sub("(\\d)days","\\1 days",larc_prov),
@@ -39,10 +40,9 @@ normalize_hurley_data <- function(raw_data){
       payer           = sub(pattern = "-.*$", replacement = "", payer),
       institution = "Hurley" ) %>%
     mutate_if(.predicate=is.character, tolower) %>%
-    filter(payer %in% c("medicaid", "molina", "private", "other", "unknown"))
+    filter(payer %in% c("medicaid", "molina", "private", "other", "unknown"),
+           contra_choice %in% c("immediate pp iud", "immediate pp nexplanon", "pptl", "other", "none", "unknown"))
 }
-
-
 
 calculate_hurley_components <- function(proc_data){
   proc_data %>% 
@@ -57,7 +57,7 @@ calculate_hurley_components <- function(proc_data){
       C5 = sum(larc_prov == "4-60 days pp visit" | larc_prov == "4-60 days not pp visit" ),
       #C6 = NA, # deprecated
       C7 = sum(counseling),
-      C8 = sum(contra_choice != "none"),
+      C8 = sum(contra_choice != "unknown"),
       C9 = sum(contra_choice == "immediate pp iud" | contra_choice == "immediate pp nexplanon"),
       #C10 = sum(contra_choice != "none"), # deprecated
       C11 = sum(counseling & contra_choice == imm_method),

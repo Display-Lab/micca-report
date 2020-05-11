@@ -65,7 +65,13 @@ calculate_hurley_components <- function(proc_data){
       C13 = sum(contra_choice == "immediate pp iud"),
       C14 = sum(contra_choice == "immediate pp nexplanon"),
       C15 = sum(contra_choice == "pptl"),
-      C16 = sum(contra_choice == "other")
+      C16 = sum(contra_choice == "other"),
+      C17 = sum(contra_choice == "immediate pp iud" & imm_method == "immediate pp iud"),
+      C18 = sum(contra_choice == "immediate pp nexplanon" & imm_method == "immediate pp nexplanon"),
+      C19 = sum(contra_choice == "pptl" & imm_method == "pptl"),
+      C20 = sum(contra_choice == "other" & imm_method == "other"),
+      C21 = sum(imm_method == "immediate pp iud"),
+      C22 = sum(imm_method == "immediate pp nexplanon")
     )
 }
 
@@ -90,7 +96,13 @@ calculate_measures <- function(component_data){
       n_M11 = C14, d_M11 = C8,
       n_M12 = C15, d_M12 = C8,
       n_M13 = C16, d_M13 = C8,
-      n_M14 = C1,  d_M14 = NA) %>%
+      n_M14 = C1,  d_M14 = NA,
+      n_M16 = C17, d_M16 = C13,
+      n_M17 = C18, d_M17 = C14,
+      n_M18 = C19, d_M18 = C15,
+      n_M19 = C20, d_M19 = C16,
+      n_M20 = C21, d_M20 = C3,
+      n_M21 = C22, d_M21 = C3 ) %>%
       pivot_longer(cols = starts_with("n_"), names_to = "measure_n", 
                    names_prefix = "n_", values_to = "numerator") %>% 
       pivot_longer(cols = starts_with("d_"), names_to = "measure_d", 

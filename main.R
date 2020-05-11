@@ -57,11 +57,11 @@ circle_plot <- function(maptg_data, measure_id, middle_label="" ){
                            fill_color=c(DL_BLUE, DL_LIGHT_BORDER, DL_LIGHT_BORDER))
   
   plot_data <- maptg_data %>% 
-    select(-group) %>%
     filter(measure == measure_id, ascribee == RECIP) %>%
+    group_by(measure) %>%
     summarize(
       numerator = sum(numerator, na.rm=TRUE),
-      denominator = sum(unique(denominator), na.rm=TRUE),
+      denominator = sum(denominator, na.rm=TRUE),
       gap = denominator - numerator) %>%
     pivot_longer(cols=c("denominator","numerator", "gap"), names_to = "obs", values_to = "value") %>%
     left_join(plotting_attrs)
@@ -81,6 +81,30 @@ circle_plot <- function(maptg_data, measure_id, middle_label="" ){
                 size=4, color=DL_BLUE) +
     top_performer_theme()
 }
+
+###################
+# CONSTANTS #
+###################
+
+DL_GREEN        <- "#108A00"
+DL_LIGHT_BLUE   <- "#0174BB"
+DL_LIGHT_BORDER <- "#e7edee"
+DL_BLUE         <- "#00274C"
+DL_FILL         <- "#FFFFFF"
+DL_GRAY         <- "#878A8F"
+
+MEASURE_NAMES <- tibble( measure = c("M1", "M2", "M3", "M4", "M5", 
+                                     "M6", "M7", "M8", "M9", "M10",
+                                     "M11", "M12", "M13", "M14", "M15", 
+                                     "M16", "M17", "M18", "M19", "M20",
+                                     "M21"),
+                         short_name = c("Provision 3 PP", "Provision 60 PP", "LARC 3 PP ", "LARC 60 PP", "Couseling", 
+                                        "Choice documented ", "Prefer IPLARC", "Preference provision", "LARC PP", "Choice IUD",
+                                        "Nexplanon", "PPTL", "Other", "Delivered", "", 
+                                        "IUD", "Nexplanon", "PPTL", "Other", "IUD", 
+                                        "Nexplanon")
+                         )
+
 
 ######################
 # Process Input Data #
@@ -107,16 +131,6 @@ maptg_data <- readr::read_csv('data/maptg.csv', trim_ws=T)
 # M15	Prenatal
 
 
-###################
-# COLOR CONSTANTS #
-###################
-
-DL_GREEN        <- "#108A00"
-DL_LIGHT_BLUE   <- "#0174BB"
-DL_LIGHT_BORDER <- "#e7edee"
-DL_BLUE         <- "#00274C"
-DL_FILL         <- "#FFFFFF"
-DL_GRAY         <- "#878A8F"
 
 ###########################
 # Generate Report Content #
@@ -154,12 +168,11 @@ p1_fig_mid_left <- circle_plot(maptg_data, "M1", "Measure 1")
 #### PAGE1: MID RIGHT
 # title
 plot_data <- maptg_data %>% 
-  select(-group) %>%
   filter(measure == "M1") %>%
-  group_by(ascribee,time) %>%
+  group_by(ascribee,time, measure) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(unique(denominator), na.rm=TRUE),
+    denominator = sum(denominator, na.rm=TRUE),
     rate = numerator/denominator) %>%
   mutate(
     recipient = ifelse(ascribee == RECIP, T, F),
@@ -191,21 +204,29 @@ p1_fig_mid_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) 
 p1_fig_bot_left <- circle_plot(maptg_data, "M3", "Measure 3")
 
 ### PAGE1: BOTTOM RIGHT
-plot_data <- maptg_data %>% 
-  filter(measure == "M3") %>%
-  group_by(ascribee, group) %>%
-  summarize(numerator = sum(numerator),
-            denominator = sum(pull(., numerator)))%>%
-  mutate(rate = numerator/denominator)
 
-p1_fig_bot_right <- ggplot(plot_data, aes(x=group, y=rate)) +
-  geom_bar(aes(fill=group), stat='identity', color=DL_BLUE) +
+## TODO side by side figures facetted together or cowplotted
+plot_data <- maptg_data %>% 
+  filter(measure %in% c("M20", "M21"), ascribee == RECIP) %>%
+  group_by(group, measure) %>%
+  summarize(numerator = sum(numerator),
+            denominator = sum(pull(., numerator))) %>%
+  mutate(ratio = numerator/denominator) %>%
+  left_join(MEASURE_NAMES, by="measure")
+
+p1_fig_bot_right <- ggplot(plot_data, aes(y=ratio)) +
+  geom_bar(aes(fill=short_name,x="Device"), stat='identity') +
+  geom_bar(aes(fill=group,x="Payer"), stat='identity') +
   ylab("% of Immediate LARC Provided") +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
-  scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
+  #scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
   theme_minimal() +
-  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank())  +
-  ggtitle("Measure 3")
+  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank(),
+        legend.text = element_text(size=8), legend.key.size = unit(4, "mm"))  +
+  guides(fill=guide_legend(nrow=2)) +
+  ggtitle("Measure 20,21")
+
+p1_fig_bot_right
 
 #### PAGE2: TOP LEFT
 p2_fig_top_left <- circle_plot(maptg_data, "M5", "Measure 5")
@@ -214,12 +235,11 @@ p2_fig_top_left <- circle_plot(maptg_data, "M5", "Measure 5")
 
 # title
 plot_data <- maptg_data %>% 
-  select(-group) %>%
   filter(measure == "M5") %>%
-  group_by(ascribee,time) %>%
+  group_by(ascribee,time, measure) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(unique(denominator), na.rm=TRUE),
+    denominator = sum(denominator, na.rm=TRUE),
     rate = numerator/denominator) %>%
   mutate(
     recipient = ifelse(ascribee == RECIP, T, F),
@@ -255,8 +275,11 @@ p2_tbl_mid_left <- maptg_data %>%
   group_by(measure) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(unique(denominator), na.rm=TRUE),
-    rate = numerator/denominator)
+    denominator = sum(denominator, na.rm=TRUE),
+    rate = numerator/denominator,
+    count = paste(numerator, denominator, sep="/")) %>%
+  left_join(MEASURE_NAMES, by="measure") %>%
+  select(short_name, count, rate)
 
 p2_tbl_mid_left %>% pull(rate) %>% sum
 
@@ -268,16 +291,48 @@ plot_data <- maptg_data %>%
          measure %in% c("M10", "M11","M12","M13"))  %>%
   group_by(group, measure) %>%
   summarize(numerator = sum(numerator),
-            denominator = sum(unique(denominator))) %>%
-  mutate(rate = numerator/denominator)
+            denominator = sum(denominator)) %>%
+  mutate(rate = numerator/denominator) %>%
+  left_join(MEASURE_NAMES, by="measure")
 
 p2_fig_mid_right <- ggplot(plot_data, aes(x=group, y=rate)) +
-  geom_bar(aes(fill=measure), stat='identity', color=DL_BLUE) +
-  ylab("% of Women with Documented Choice") +
+  geom_bar(aes(fill=short_name), stat='identity', color=DL_BLUE) +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
   theme_minimal() +
-  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank())  +
-  ggtitle("Measures 10,11,12,13")
+  theme(legend.position="bottom", axis.title = element_blank(), title = element_text(size=10),
+        legend.title = element_blank(), legend.text = element_text(size=8), legend.key.size = unit(4, "mm") ) +
+  ggtitle("M10-13") +
+  guides(fill=guide_legend(nrow=2))
+
+#### PAGE2: BOTTOM LEFT
+p2_fig_bot_left <- circle_plot(maptg_data, "M8", "Measure 8")
+
+#### PAGE2: BOTTOM RIGHT
+PALLETTE <- c("Provided"=DL_BLUE, "Preferred"=DL_GREEN)
+
+plot_data <- maptg_data %>% 
+  filter(ascribee == RECIP,
+         measure %in% c("M16","M17","M18","M19"))  %>%
+  group_by(measure) %>%
+  summarize(numerator = sum(numerator),
+            denominator = sum(denominator)) %>%
+  left_join(MEASURE_NAMES, by="measure") %>%
+  mutate(rate = numerator/denominator,
+         short_name = as.factor(short_name),
+         mpos = as.numeric(short_name))
+
+p2_fig_bot_right <- ggplot(plot_data, aes(x=short_name)) +
+  geom_bar(aes(y=numerator, color="Provided"), fill=DL_LIGHT_BLUE, stat='identity') +
+  geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred"), size=3) +
+  scale_color_manual(name="foo", values=PALLETTE) +
+  scale_fill_manual(name="foo", values=PALLETTE) +
+  theme_minimal() +
+  theme(legend.position="right", axis.title.x = element_blank(), title = element_text(size=10),
+        axis.text.x = element_text(angle=45, hjust=1, face="bold"),
+        legend.title = element_blank(), legend.text = element_text(size=8), legend.key.size = unit(4, "mm") ) +
+  ggtitle("M16-19") +
+  guides(color=guide_legend(override.aes=list(fill="white"))) +
+  ylab("Number of Women")
 
 ###################
 # Generate Report #

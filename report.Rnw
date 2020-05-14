@@ -111,7 +111,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \centering
   Payer Proportion of Deliveries
     << p1-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    p1_fig_top_right
+    fig_7F5D31
     @
   \vfill
   \makebox[\linewidth]{}
@@ -132,7 +132,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \centering
   Overall Immediate PP Contraception Rate\\
     << p1-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     p1_fig_mid_left
+     fig_ADA835A
     @
   \vfill
   \makebox[\linewidth]{}
@@ -144,7 +144,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \centering
   Immediate PP Contraception Rate by Month
     << p1-mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    p1_fig_mid_right
+    fig_707A6E
     @
   \vfill
   \makebox[\linewidth]{}
@@ -163,7 +163,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   Immediate LARC\\
   \vspace{2mm}
     << p1-bot-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     p1_fig_bot_left
+     fig_9C0A4F
     @
   \vfill
   \makebox[\linewidth]{}
@@ -175,7 +175,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \centering
   Immediate LARC Provision by Payer\\
     << p1-bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    p1_fig_bot_right
+    fig_BE214E
     @
   \vfill
   \makebox[\linewidth]{}
@@ -198,7 +198,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   Counseling Rate\\
   \vspace{2mm}
     << p2-top-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     p2_fig_top_left
+     fig_540727
     @
   \vfill
   \makebox[\linewidth]{}
@@ -209,7 +209,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
     << p2-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-     p2_fig_top_right
+     fig_5BF5D0
     @
   \vfill
   \makebox[\linewidth]{}
@@ -227,7 +227,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \centering{
   << p2-mid-left, include=TRUE, message=FALSE, echo=FALSE>>=
     # DON"T INCLUDE A CAPTION.  It will bork the environment
-    knitr::kable(p2_tbl_mid_left, col.names = NULL,  format.args = list(digits=3),
+    knitr::kable(tbl_82C4A3, col.names = NULL,  format.args = list(digits=3),
                  booktabs=T, format="latex") # %>% kable_styling(latex_options="scale_down")
   @
   }
@@ -238,7 +238,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \strut\vspace*{-\baselineskip}\newline
   Preference of Women with Documented Choice
   << p2-mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-     p2_fig_mid_right
+     fig_1903AB
   @
   \vfill
   \makebox[\linewidth]{}
@@ -254,24 +254,23 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
   \centering
-  Counseling Rate\\
+  Provision of Preference Rate\\
   \vspace{2mm}
     << dbg1, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     p2_fig_bot_left
+     fig_BDBC81
     @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  Provision of Preference
+  Provision of Preference Counts\\
   \centering
     << dbg2, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-     p2_fig_bot_right
+     fig_E8F578
     @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
-
 
 \end{document}

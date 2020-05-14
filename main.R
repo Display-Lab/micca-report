@@ -7,6 +7,10 @@ library(stringr)
 library(tidyr)
 library(kableExtra)
 
+
+# Useful for generating figure ids
+nameit <- function(){paste0('fig_', paste0(sample(c(0:9, LETTERS[1:6]), 6, T), collapse=''))}
+
 ####################
 # Common Functions #
 ####################
@@ -138,11 +142,11 @@ maptg_data <- readr::read_csv('data/maptg.csv', trim_ws=T)
 
 RECIP <- "Hurley"
 
-#### PAGE1: TOP LEFT
+#### SUM: Women Delievered
 # Sum measures across groups for women delivered
 m14_sum <- maptg_data %>% filter(measure == "M14") %>% pull(numerator) %>% sum()
 
-#### TOP RIGHT
+#### FIGURE
 # stacked bar
 plot_data <- maptg_data %>% 
   filter(measure =="M14") %>%
@@ -150,7 +154,7 @@ plot_data <- maptg_data %>%
   mutate(denominator = sum(numerator),
          payer_rate = numerator/denominator)
 
-p1_fig_top_right <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
+fig_7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   geom_bar(aes(fill=group), stat='identity', color=DL_BLUE) +
   scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
   ylab("% Women Delivered") +
@@ -160,12 +164,14 @@ p1_fig_top_right <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) +
   ggtitle("Measure 14")
 
-#### PAGE1: MID LEFT
+#### FIGURE
 # circle
 # M1	Provision 3 PP
-p1_fig_mid_left <- circle_plot(maptg_data, "M1", "Measure 1")
+#p1_fig_mid_left <- circle_plot(maptg_data, "M1", "Measure 1")
+fig_ADA835A <- circle_plot(maptg_data, "M1", "Measure 1")
 
-#### PAGE1: MID RIGHT
+
+#### FIGURE
 # title
 plot_data <- maptg_data %>% 
   filter(measure == "M1") %>%
@@ -185,7 +191,7 @@ plot_data <- maptg_data %>%
 breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
 labels_y <- c("20%", "40%", "60%", "80%", "100%")
   
-p1_fig_mid_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+fig_707A6E <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
   geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_BLUE) +
   geom_line(size=1, lineend="round") +
   geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
@@ -200,10 +206,10 @@ p1_fig_mid_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) 
   theme(legend.position="bottom") +
   ggtitle("Measure 1")
 
-#### PAGE1: BOTTOM LEFT
-p1_fig_bot_left <- circle_plot(maptg_data, "M3", "Measure 3")
+#### FIGURE
+fig_9C0A4F <- circle_plot(maptg_data, "M3", "Measure 3")
 
-### PAGE1: BOTTOM RIGHT
+### FIGURE
 
 ## TODO side by side figures facetted together or cowplotted
 plot_data <- maptg_data %>% 
@@ -214,7 +220,7 @@ plot_data <- maptg_data %>%
   mutate(ratio = numerator/denominator) %>%
   left_join(MEASURE_NAMES, by="measure")
 
-p1_fig_bot_right <- ggplot(plot_data, aes(y=ratio)) +
+fig_BE214E <- ggplot(plot_data, aes(y=ratio)) +
   geom_bar(aes(fill=short_name,x="Device"), stat='identity') +
   geom_bar(aes(fill=group,x="Payer"), stat='identity') +
   ylab("% of Immediate LARC Provided") +
@@ -226,14 +232,10 @@ p1_fig_bot_right <- ggplot(plot_data, aes(y=ratio)) +
   guides(fill=guide_legend(nrow=2)) +
   ggtitle("Measure 20,21")
 
-p1_fig_bot_right
+#### FIGURE
+fig_540727 <- circle_plot(maptg_data, "M5", "Measure 5")
 
-#### PAGE2: TOP LEFT
-p2_fig_top_left <- circle_plot(maptg_data, "M5", "Measure 5")
-
-#### PAGE2: TOP RIGHT
-
-# title
+#### FIGURE
 plot_data <- maptg_data %>% 
   filter(measure == "M5") %>%
   group_by(ascribee,time, measure) %>%
@@ -252,7 +254,7 @@ plot_data <- maptg_data %>%
 breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
 labels_y <- c("20%", "40%", "60%", "80%", "100%")
   
-p2_fig_top_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+fig_5BF5D0 <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
   geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_BLUE) +
   geom_line(size=1, lineend="round") +
   geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
@@ -267,9 +269,8 @@ p2_fig_top_right <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) 
   theme(legend.position="bottom") +
   ggtitle("Measure 5")
 
-#### PAGE2: MID LEFT
-
-p2_tbl_mid_left <- maptg_data %>% 
+#### TABLE DATA
+tbl_82C4A3 <- maptg_data %>% 
   filter(ascribee == RECIP,
          measure %in% c("M10", "M11","M12","M13")) %>%
   group_by(measure) %>%
@@ -281,11 +282,8 @@ p2_tbl_mid_left <- maptg_data %>%
   left_join(MEASURE_NAMES, by="measure") %>%
   select(short_name, count, rate)
 
-p2_tbl_mid_left %>% pull(rate) %>% sum
-
-#### PAGE2: MID RIGHT
+#### FIGURE
 # Preference of LARC by payer
-# miscalculated denominators? no.  These measures do not account for "none" as a choice.
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
          measure %in% c("M10", "M11","M12","M13"))  %>%
@@ -295,7 +293,7 @@ plot_data <- maptg_data %>%
   mutate(rate = numerator/denominator) %>%
   left_join(MEASURE_NAMES, by="measure")
 
-p2_fig_mid_right <- ggplot(plot_data, aes(x=group, y=rate)) +
+fig_1903AB <- ggplot(plot_data, aes(x=group, y=rate)) +
   geom_bar(aes(fill=short_name), stat='identity', color=DL_BLUE) +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
   theme_minimal() +
@@ -304,10 +302,10 @@ p2_fig_mid_right <- ggplot(plot_data, aes(x=group, y=rate)) +
   ggtitle("M10-13") +
   guides(fill=guide_legend(nrow=2))
 
-#### PAGE2: BOTTOM LEFT
-p2_fig_bot_left <- circle_plot(maptg_data, "M8", "Measure 8")
+#### FIGURE
+fig_BDBC81 <- circle_plot(maptg_data, "M8", "Measure 8")
 
-#### PAGE2: BOTTOM RIGHT
+#### FIGURE
 PALLETTE <- c("Provided"=DL_BLUE, "Preferred"=DL_GREEN)
 
 plot_data <- maptg_data %>% 
@@ -321,7 +319,7 @@ plot_data <- maptg_data %>%
          short_name = as.factor(short_name),
          mpos = as.numeric(short_name))
 
-p2_fig_bot_right <- ggplot(plot_data, aes(x=short_name)) +
+fig_E8F578 <- ggplot(plot_data, aes(x=short_name)) +
   geom_bar(aes(y=numerator, color="Provided"), fill=DL_LIGHT_BLUE, stat='identity') +
   geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred"), size=3) +
   scale_color_manual(name="foo", values=PALLETTE) +

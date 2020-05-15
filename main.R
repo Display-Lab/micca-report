@@ -9,7 +9,38 @@ library(kableExtra)
 
 
 # Useful for generating figure ids
-nameit <- function(){paste0('fig_', paste0(sample(c(0:9, LETTERS[1:6]), 6, T), collapse=''))}
+nameit <- function(){paste0('fig', paste0(sample(c(0:9, LETTERS[1:6]), 6, T), collapse=''))}
+
+###################
+# CONSTANTS #
+###################
+DL_GREEN      <- "#108A00"
+DL_BLUE       <- "#0174BB"
+DL_LIGHT_BLUE <- "#E7EDEE"
+DL_DARK_BLUE  <- "#00274C"
+DL_GRAY       <- "#878A8F"
+DL_MAUVE      <- "#853754"
+DL_ORANGE     <- "#BA5827"
+DL_FILL       <- "#FFFFFF"
+
+REPORT_PAL <- c(medicaid=DL_GREEN,
+                non_medicaid=DL_MAUVE,
+                IUD=DL_DARK_BLUE,
+                Nexplanon=DL_BLUE,
+                PPTL=DL_LIGHT_BLUE,
+                Other=DL_GRAY)
+
+MEASURE_NAMES <- tibble( measure = c("M1", "M2", "M3", "M4", "M5", 
+                                     "M6", "M7", "M8", "M9", "M10",
+                                     "M11", "M12", "M13", "M14", "M15", 
+                                     "M16", "M17", "M18", "M19", "M20",
+                                     "M21"),
+                         short_name = c("Provision 3 PP", "Provision 60 PP", "LARC 3 PP ", "LARC 60 PP", "Couseling", 
+                                        "Choice documented ", "Prefer IPLARC", "Preference provision", "LARC PP", "IUD",
+                                        "Nexplanon", "PPTL", "Other", "Delivered", "", 
+                                        "IUD", "Nexplanon", "PPTL", "Other", "IUD", 
+                                        "Nexplanon")
+                         )
 
 ####################
 # Common Functions #
@@ -58,7 +89,7 @@ circle_plot <- function(maptg_data, measure_id, middle_label="" ){
   plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
                            ring=c(50,50,58),
                            width=c(16,16,6),
-                           fill_color=c(DL_BLUE, DL_LIGHT_BORDER, DL_LIGHT_BORDER))
+                           fill_color=c(DL_DARK_BLUE, DL_LIGHT_BLUE, DL_LIGHT_BLUE))
   
   plot_data <- maptg_data %>% 
     filter(measure == measure_id, ascribee == RECIP) %>%
@@ -74,67 +105,29 @@ circle_plot <- function(maptg_data, measure_id, middle_label="" ){
   denom <- plot_data %>% filter(obs=="denominator") %>% pull(value)
   perf_label <- paste(floor(100*numer/denom), "%",sep="")
     
-  fig_mid_left <-ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
+  ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
     geom_col() +
     scale_fill_identity() +
     scale_x_continuous(limits=c(0,75)) +
     coord_polar(theta="y", direction=-1) +
-    dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_BLUE, fontface=2) +
-    dl_annotate("text", x=8, y=0, label=middle_label, size=2.5, color=DL_BLUE) +
+    dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_DARK_BLUE, fontface=2) +
+    dl_annotate("text", x=8, y=0, label=middle_label, size=2.5, color=DL_DARK_BLUE) +
     dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
-                size=4, color=DL_BLUE) +
+                size=4, color=DL_DARK_BLUE) +
     top_performer_theme()
 }
-
-###################
-# CONSTANTS #
-###################
-
-DL_GREEN        <- "#108A00"
-DL_LIGHT_BLUE   <- "#0174BB"
-DL_LIGHT_BORDER <- "#e7edee"
-DL_BLUE         <- "#00274C"
-DL_FILL         <- "#FFFFFF"
-DL_GRAY         <- "#878A8F"
-
-MEASURE_NAMES <- tibble( measure = c("M1", "M2", "M3", "M4", "M5", 
-                                     "M6", "M7", "M8", "M9", "M10",
-                                     "M11", "M12", "M13", "M14", "M15", 
-                                     "M16", "M17", "M18", "M19", "M20",
-                                     "M21"),
-                         short_name = c("Provision 3 PP", "Provision 60 PP", "LARC 3 PP ", "LARC 60 PP", "Couseling", 
-                                        "Choice documented ", "Prefer IPLARC", "Preference provision", "LARC PP", "Choice IUD",
-                                        "Nexplanon", "PPTL", "Other", "Delivered", "", 
-                                        "IUD", "Nexplanon", "PPTL", "Other", "IUD", 
-                                        "Nexplanon")
-                         )
-
 
 ######################
 # Process Input Data #
 ######################
-maptg_data <- readr::read_csv('data/maptg.csv', trim_ws=T)
-#  ascribee,time,group,measure,numerator,denominator
-#  Hurley,2020-01-01,Medicaid,M1,14,65
+full_maptg_data <- readr::read_csv('data/maptg.csv', trim_ws=T)
 
-# ID	Short Name
-# M1	Provision 3 PP
-# M2	Provision 60 PP
-# M3	LARC 3 PP 
-# M4	LARC 60 PP
-# M5	Couseling
-# M6	Choice documented 
-# M7	Prefer IPLARC
-# M8	Preference provision
-# M9	LARC PP
-# M10	Choice IUD
-# M11	Choice Nexplanon
-# M12	Choice PPTL
-# M13	Choice other
-# M14	Delivered
-# M15	Prenatal
+# Trim to date range
+START_DATE <- lubridate::ymd('2020-01-01')
+END_DATE <- lubridate::ymd('2020-04-01')
+maptg_data <- full_maptg_data %>% filter( time >= START_DATE, time < END_DATE)
 
-
+OBS_END_DATE <- maptg_data$time %>% max
 
 ###########################
 # Generate Report Content #
@@ -154,22 +147,24 @@ plot_data <- maptg_data %>%
   mutate(denominator = sum(numerator),
          payer_rate = numerator/denominator)
 
-fig_7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
-  geom_bar(aes(fill=group), stat='identity', color=DL_BLUE) +
+fig7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
+  geom_bar(aes(fill=group), stat='identity', color=DL_DARK_BLUE) +
   scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
   ylab("% Women Delivered") +
   scale_y_continuous(labels=scales::percent) +
-  scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
+  scale_fill_manual(values = REPORT_PAL, guide=guide_legend()) +
   theme_minimal() +
-  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) +
-  ggtitle("Measure 14")
+  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) 
+  
+content_id <- deparse(substitute(fig7F5D31))
+info7F5D3 <- paste(content_id, "m14")
 
 #### FIGURE
 # circle
 # M1	Provision 3 PP
-#p1_fig_mid_left <- circle_plot(maptg_data, "M1", "Measure 1")
-fig_ADA835A <- circle_plot(maptg_data, "M1", "Measure 1")
-
+figADA835A <- circle_plot(maptg_data, "M1", "")
+content_id <- deparse(substitute(fig7F5D31))
+infoADA835A <- paste(content_id, "m1")
 
 #### FIGURE
 # title
@@ -184,30 +179,37 @@ plot_data <- maptg_data %>%
     recipient = ifelse(ascribee == RECIP, T, F),
     perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
     arrow = as.factor(ifelse(recipient, "show", "noshow")),
-    pcolor = ifelse(recipient, DL_BLUE, DL_GRAY)
+    pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
     ) 
 
 # y axis labels
 breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
 labels_y <- c("20%", "40%", "60%", "80%", "100%")
   
-fig_707A6E <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
-  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_BLUE) +
+fig707A6E <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_DARK_BLUE) +
   geom_line(size=1, lineend="round") +
   geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
   scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
   scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
   scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
-  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_BLUE,
+  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_DARK_BLUE,
              color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
   single_line_theme() +
   scale_color_manual(labels = plot_data$ascribee, 
                      values = plot_data$pcolor, guide = guide_legend(title=NULL)) +
-  theme(legend.position="bottom") +
-  ggtitle("Measure 1")
+  theme(legend.position="bottom")
+
+content_id <- deparse(substitute(fig707A6E))
+info707A6E <- paste(content_id, "m1")
+
+content_id <- deparse(substitute(fig7F5D31))
+info7F5D3 <- paste(content_id, "m14")
 
 #### FIGURE
-fig_9C0A4F <- circle_plot(maptg_data, "M3", "Measure 3")
+fig9C0A4F <- circle_plot(maptg_data, "M3", "")
+content_id <- deparse(substitute(fig9C0A4F))
+info9C0A4F <- paste(content_id, "m3")
 
 ### FIGURE
 
@@ -220,20 +222,24 @@ plot_data <- maptg_data %>%
   mutate(ratio = numerator/denominator) %>%
   left_join(MEASURE_NAMES, by="measure")
 
-fig_BE214E <- ggplot(plot_data, aes(y=ratio)) +
+figBE214E <- ggplot(plot_data, aes(y=ratio)) +
   geom_bar(aes(fill=short_name,x="Device"), stat='identity') +
   geom_bar(aes(fill=group,x="Payer"), stat='identity') +
   ylab("% of Immediate LARC Provided") +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
-  #scale_fill_manual(values = c(DL_GREEN, DL_LIGHT_BLUE), guide=guide_legend()) +
+  scale_fill_manual(values = REPORT_PAL, guide=guide_legend()) +
   theme_minimal() +
   theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank(),
         legend.text = element_text(size=8), legend.key.size = unit(4, "mm"))  +
-  guides(fill=guide_legend(nrow=2)) +
-  ggtitle("Measure 20,21")
+  guides(fill=guide_legend(nrow=2))
+
+content_id <- deparse(substitute(figBE214E))
+infoBE214E <- paste(content_id, "m20,21")
 
 #### FIGURE
-fig_540727 <- circle_plot(maptg_data, "M5", "Measure 5")
+fig540727 <- circle_plot(maptg_data, "M5", "")
+content_id <- deparse(substitute(fig540727))
+info540727 <- paste(content_id, "m5")
 
 #### FIGURE
 plot_data <- maptg_data %>% 
@@ -247,27 +253,29 @@ plot_data <- maptg_data %>%
     recipient = ifelse(ascribee == RECIP, T, F),
     perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
     arrow = as.factor(ifelse(recipient, "show", "noshow")),
-    pcolor = ifelse(recipient, DL_BLUE, DL_GRAY)
+    pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
     ) 
 
 # y axis labels
 breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
 labels_y <- c("20%", "40%", "60%", "80%", "100%")
   
-fig_5BF5D0 <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
-  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_BLUE) +
+fig5BF5D0 <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_DARK_BLUE) +
   geom_line(size=1, lineend="round") +
   geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
   scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
   scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
   scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
-  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_BLUE,
+  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_DARK_BLUE,
              color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
   single_line_theme() +
   scale_color_manual(labels = plot_data$ascribee, 
                      values = plot_data$pcolor, guide = guide_legend(title=NULL)) +
-  theme(legend.position="bottom") +
-  ggtitle("Measure 5")
+  theme(legend.position="bottom")
+
+content_id <- deparse(substitute(fig5BF5D0))
+info5BF5D0 <- paste(content_id, "m5")
 
 #### TABLE DATA
 tbl_82C4A3 <- maptg_data %>% 
@@ -293,20 +301,25 @@ plot_data <- maptg_data %>%
   mutate(rate = numerator/denominator) %>%
   left_join(MEASURE_NAMES, by="measure")
 
-fig_1903AB <- ggplot(plot_data, aes(x=group, y=rate)) +
-  geom_bar(aes(fill=short_name), stat='identity', color=DL_BLUE) +
+fig1903AB <- ggplot(plot_data, aes(x=group, y=rate)) +
+  geom_bar(aes(fill=short_name), stat='identity', color=DL_DARK_BLUE) +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  scale_fill_manual(values = REPORT_PAL, guide=guide_legend()) +
   theme_minimal() +
   theme(legend.position="bottom", axis.title = element_blank(), title = element_text(size=10),
         legend.title = element_blank(), legend.text = element_text(size=8), legend.key.size = unit(4, "mm") ) +
-  ggtitle("M10-13") +
   guides(fill=guide_legend(nrow=2))
 
-#### FIGURE
-fig_BDBC81 <- circle_plot(maptg_data, "M8", "Measure 8")
+content_id <- deparse(substitute(fig1903AB))
+info1903AB <- paste(content_id, "m10,11,12,13")
 
 #### FIGURE
-PALLETTE <- c("Provided"=DL_BLUE, "Preferred"=DL_GREEN)
+figBDBC81 <- circle_plot(maptg_data, "M8", "")
+content_id <- deparse(substitute(figBDBC81))
+infoBDBC81 <- paste(content_id, "m8")
+
+#### FIGURE
+pref_pal <- c("Provided"=DL_DARK_BLUE, "Preferred"=DL_MAUVE)
 
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
@@ -319,18 +332,20 @@ plot_data <- maptg_data %>%
          short_name = as.factor(short_name),
          mpos = as.numeric(short_name))
 
-fig_E8F578 <- ggplot(plot_data, aes(x=short_name)) +
-  geom_bar(aes(y=numerator, color="Provided"), fill=DL_LIGHT_BLUE, stat='identity') +
+figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
+  geom_bar(aes(y=numerator, color="Provided"), fill=DL_GRAY, stat='identity') +
   geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred"), size=3) +
-  scale_color_manual(name="foo", values=PALLETTE) +
-  scale_fill_manual(name="foo", values=PALLETTE) +
+  scale_color_manual(values=pref_pal) +
+  scale_fill_manual(values=pref_pal) +
   theme_minimal() +
   theme(legend.position="right", axis.title.x = element_blank(), title = element_text(size=10),
         axis.text.x = element_text(angle=45, hjust=1, face="bold"),
         legend.title = element_blank(), legend.text = element_text(size=8), legend.key.size = unit(4, "mm") ) +
-  ggtitle("M16-19") +
   guides(color=guide_legend(override.aes=list(fill="white"))) +
   ylab("Number of Women")
+
+content_id <- deparse(substitute(figE8F578))
+infoE8F578 <- paste(content_id, "m16,17,18,19")
 
 ###################
 # Generate Report #

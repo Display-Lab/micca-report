@@ -29,7 +29,6 @@
 % TODO %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % Calculate the title date range
- % Add draft 12 add on figures.
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DEBUGGING TOOLS %
@@ -80,7 +79,7 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.07\textheight][t]{\textwidth}
 \centering
-\Huge XYZ Hospital Jan - Apr 2020
+\Huge \Sexpr{RECIP} Jan - Apr 2020
 \end{minipage}
 
 \nointerlineskip
@@ -106,15 +105,14 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 \end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{info7F5D3}} \par }
   \centering
   Payer Proportion of Deliveries
-    << p1-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    fig_7F5D31
+    << p1-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=2.9, dev='pdf' >>=
+    fig7F5D31
     @
   \vfill
-  \makebox[\linewidth]{}
+  \makebox[\textwidth]{}
 \end{minipage}
 
 \nointerlineskip
@@ -127,22 +125,22 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
   \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{info540727}} \par }
   \centering
   Counseling Rate\\
   \vspace{2mm}
     << p2-top-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     fig_540727
+     fig540727
     @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{info5BF5D0}} \par }
   \centering
     << p2-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-     fig_5BF5D0
+     fig5BF5D0
     @
   \vfill
   \makebox[\linewidth]{}
@@ -155,23 +153,23 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 \nointerlineskip
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{infoBDBC81}} \par }
   \centering
   Provision of Preference Rate\\
   \vspace{2mm}
     << dbg1, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     fig_BDBC81
+     figBDBC81
     @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
+  \parbox{\textwidth}{ {\tiny \Sexpr{infoE8F578}} \par }
   Provision of Preference Counts\\
   \centering
     << dbg2, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-     fig_E8F578
+     figE8F578
     @
   \vfill
   \makebox[\linewidth]{}
@@ -204,40 +202,39 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 \end{minipage}\hfill
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
+  \parbox{\textwidth}{ {\tiny \Sexpr{info1903AB}} \par }
   Preference of Women with Documented Choice
   << p2-mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-     fig_1903AB
+     fig1903AB
   @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
 
+\smallskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 2: MIDDLE %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tcolorbox}[breakable,colback=white,colframe=black,width=\dimexpr\textwidth\relax]
-\nointerlineskip
 
 \begin{minipage}[t][0.29\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{infoADA835A}} \par }
   \centering
   Overall Immediate PP Contraception Rate\\
     << p1-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     fig_ADA835A
+     figADA835A
     @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
 \begin{minipage}[t][0.29\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{info707A6E}} \par }
   \centering
   Immediate PP Contraception Rate by Month
     << p1-mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    fig_707A6E
+    fig707A6E
     @
   \vfill
   \makebox[\linewidth]{}
@@ -250,25 +247,23 @@ knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackag
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.29\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{info9C0A4F}} \par }
   \centering
   Immediate LARC\\
   \vspace{2mm}
     << p1-bot-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
-     fig_9C0A4F
+     fig9C0A4F
     @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
 \begin{minipage}[t][0.29\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \parbox{\textwidth}{ {\tiny \Sexpr{infoBE214E}} \par }
   \centering
   Immediate LARC Provision by Payer\\
     << p1-bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
-    fig_BE214E
+    figBE214E
     @
   \vfill
   \makebox[\linewidth]{}

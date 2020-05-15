@@ -117,6 +117,7 @@ measure_df <- calculate_measures(comp_df)
 # Create MAPTG data
 maptg <- measure_df %>% 
   rename(time=report_month) %>%
+  mutate(group = ifelse(group !="medicaid", "non_medicaid", group)) %>%
   add_column(ascribee="UMich", .before=1)
 
 # Emit cleaned data to file

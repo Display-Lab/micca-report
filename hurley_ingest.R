@@ -149,8 +149,10 @@ comp_data <- bind_rows(jan_comp, feb_comp, mar_comp)
 measure_data <- calculate_measures(comp_data)
 
 # make into maptg format
+#  Do substitution to non_medicaide here instead of during normalization
 maptg <- measure_data %>% 
   rename(time=report_month) %>%
+  mutate(group = ifelse(group !="medicaid", "non_medicaid", group)) %>%
   add_column(ascribee="Hurley", .before=1)
 
 # Emit cleaned data to file

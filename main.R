@@ -129,20 +129,27 @@ maptg_data <- full_maptg_data %>% filter( time >= START_DATE, time < END_DATE)
 
 OBS_END_DATE <- maptg_data$time %>% max
 
+START_MONTH <- format(START_DATE, "%b")
+END_MONTH <- format(END_DATE, "%b")
+END_YEAR <- format(END_DATE, "%Y")
+
+# Set recipient of report
+RECIP <- "Hurley"
+
 ###########################
 # Generate Report Content #
 ###########################
 
-RECIP <- "Hurley"
-
 #### SUM: Women Delievered
-# Sum measures across groups for women delivered
-m14_sum <- maptg_data %>% filter(measure == "M14") %>% pull(numerator) %>% sum()
+m14_sum <- maptg_data %>% 
+  filter(measure == "M14", ascribee == RECIP) %>% 
+  pull(numerator) %>% 
+  sum()
 
 #### FIGURE
 # stacked bar
 plot_data <- maptg_data %>% 
-  filter(measure =="M14") %>%
+  filter(measure =="M14", ascribee == RECIP) %>%
   group_by(time) %>%
   mutate(denominator = sum(numerator),
          payer_rate = numerator/denominator)
@@ -154,7 +161,8 @@ fig7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   scale_y_continuous(labels=scales::percent) +
   scale_fill_manual(values = REPORT_PAL, guide=guide_legend()) +
   theme_minimal() +
-  theme(legend.position="bottom",  axis.title.x = element_blank(),  legend.title = element_blank()) 
+  theme(legend.position="bottom",  axis.title.x = element_blank(),
+        legend.title = element_blank(), legend.box.spacing = unit(0,"mm")) 
   
 content_id <- deparse(substitute(fig7F5D31))
 info7F5D3 <- paste(content_id, "m14")
@@ -167,10 +175,9 @@ content_id <- deparse(substitute(fig7F5D31))
 infoADA835A <- paste(content_id, "m1")
 
 #### FIGURE
-# title
 plot_data <- maptg_data %>% 
-  filter(measure == "M1") %>%
-  group_by(ascribee,time, measure) %>%
+  filter(measure == "M1", ascribee == RECIP) %>%
+  group_by(ascribee, time, measure) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
     denominator = sum(denominator, na.rm=TRUE),
@@ -178,7 +185,7 @@ plot_data <- maptg_data %>%
   mutate(
     recipient = ifelse(ascribee == RECIP, T, F),
     perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
-    arrow = as.factor(ifelse(recipient, "show", "noshow")),
+    arrow = ifelse(recipient, "show", "noshow"),
     pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
     ) 
 
@@ -243,7 +250,7 @@ info540727 <- paste(content_id, "m5")
 
 #### FIGURE
 plot_data <- maptg_data %>% 
-  filter(measure == "M5") %>%
+  filter(measure == "M5", ascribee == RECIP) %>%
   group_by(ascribee,time, measure) %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
@@ -252,7 +259,7 @@ plot_data <- maptg_data %>%
   mutate(
     recipient = ifelse(ascribee == RECIP, T, F),
     perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
-    arrow = as.factor(ifelse(recipient, "show", "noshow")),
+    arrow = ifelse(recipient, "show", "noshow"),
     pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
     ) 
 
@@ -306,8 +313,10 @@ fig1903AB <- ggplot(plot_data, aes(x=group, y=rate)) +
   scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
   scale_fill_manual(values = REPORT_PAL, guide=guide_legend()) +
   theme_minimal() +
-  theme(legend.position="bottom", axis.title = element_blank(), title = element_text(size=10),
-        legend.title = element_blank(), legend.text = element_text(size=8), legend.key.size = unit(4, "mm") ) +
+  theme(legend.position="bottom", axis.title = element_blank(), 
+        title = element_text(size=10), legend.title = element_blank(), 
+        legend.text = element_text(size=8), legend.key.size = unit(4, "mm"),
+        legend.box.spacing = unit(0,"mm")) +
   guides(fill=guide_legend(nrow=2))
 
 content_id <- deparse(substitute(fig1903AB))

@@ -147,7 +147,6 @@ m14_sum <- maptg_data %>%
   sum()
 
 #### FIGURE
-# stacked bar
 plot_data <- maptg_data %>% 
   filter(measure =="M14", ascribee == RECIP) %>%
   group_by(time) %>%
@@ -163,13 +162,11 @@ fig7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   theme_minimal() +
   theme(legend.position="bottom",  axis.title.x = element_blank(),
         legend.title = element_blank(), legend.box.spacing = unit(0,"mm")) 
-  
+ fig7F5D31 
 content_id <- deparse(substitute(fig7F5D31))
 info7F5D3 <- paste(content_id, "m14")
 
 #### FIGURE
-# circle
-# M1	Provision 3 PP
 figADA835A <- circle_plot(maptg_data, "M1", "")
 content_id <- deparse(substitute(fig7F5D31))
 infoADA835A <- paste(content_id, "m1")
@@ -292,10 +289,10 @@ tbl_82C4A3 <- maptg_data %>%
   summarize(
     numerator = sum(numerator, na.rm=TRUE),
     denominator = sum(denominator, na.rm=TRUE),
-    rate = numerator/denominator,
-    count = paste(numerator, denominator, sep="/")) %>%
+    percent = sprintf('%.0f%%', 100*(numerator/denominator))) %>%
   left_join(MEASURE_NAMES, by="measure") %>%
-  select(short_name, count, rate)
+  select(short_name, numerator, percent) %>%
+  rename(Choice=short_name, Count=numerator, Percentage=percent )
 
 #### FIGURE
 # Preference of LARC by payer
@@ -342,15 +339,16 @@ plot_data <- maptg_data %>%
          mpos = as.numeric(short_name))
 
 figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
-  geom_bar(aes(y=numerator, color="Provided"), fill=DL_GRAY, stat='identity') +
-  geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred"), size=3) +
-  scale_color_manual(values=pref_pal) +
-  scale_fill_manual(values=pref_pal) +
+  geom_bar(aes(y=numerator, color="Provided", fill="Provided"), stat='identity') +
+  geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred", fill="Preferred"), size=3) +
+  scale_color_manual("foo",values=pref_pal, labels = names(pref_pal)) +
+  scale_fill_manual("foo",values=pref_pal, labels = names(pref_pal)) +
   theme_minimal() +
-  theme(legend.position="right", axis.title.x = element_blank(), title = element_text(size=10),
+  theme(legend.position="right", axis.title.x = element_blank(),
         axis.text.x = element_text(angle=45, hjust=1, face="bold"),
-        legend.title = element_blank(), legend.text = element_text(size=8), legend.key.size = unit(4, "mm") ) +
-  guides(color=guide_legend(override.aes=list(fill="white"))) +
+        legend.title = element_blank(), legend.text = element_text(size=8), 
+        legend.key.size = unit(4, "mm") ) +
+  #guides(color=guide_legend(override.aes=list(fill="Provided"))) +
   ylab("Number of Women")
 
 content_id <- deparse(substitute(figE8F578))

@@ -30,7 +30,7 @@ REPORT_PAL <- c(medicaid=DL_GREEN,
                 PPTL=DL_LIGHT_BLUE,
                 Other=DL_GRAY)
 
-ASCRIBEE_TITLES <- c(UMich="Michgan Medicine",
+ASCRIBEE_TITLES <- c(UMich="Michigan Medicine",
                      Hurely="Hurley Medical Center",
                      Munson="Munson Healthcare")
 
@@ -91,8 +91,11 @@ single_line_theme <- function(){
 micca_mean <- function(maptg_data, measure_id){
   maptg_data %>%
     filter(measure==measure_id) %>% 
-    summarize(mean = sum(numerator) / sum(denominator)) %>% 
-    pull(mean) 
+    group_by(ascribee) %>%
+    summarize(hosp_mean = sum(numerator) / sum(denominator)) %>% 
+    ungroup() %>%
+    summarize(micca_mean = mean(hosp_mean)) %>% 
+    pull(micca_mean) 
 }
 
 # Common Circle Plot
@@ -143,16 +146,23 @@ circle_plot <- function(maptg_data, measure_id, benchmark=NULL, benchmark_label=
 
 # Common Line Plot
 line_plot <- function(maptg_data, measure_id){
+  recipient_title <- ASCRIBEE_TITLES[RECIP]
+  
   micca_data <- maptg_data %>% 
     filter(measure == measure_id) %>%
-    group_by(time) %>%
+    group_by(time, ascribee) %>%
     summarize(
       numerator = sum(numerator, na.rm=TRUE),
       denominator = sum(denominator, na.rm=TRUE),
-      rate = numerator/denominator,
+      rate = numerator/denominator) %>%
+    ungroup() %>%
+    group_by(time) %>%
+    summarize(
+      numerator = floor(mean(numerator)),
+      denominator = floor(mean(denominator)),
+      rate = mean(rate),
       ascribee = "MICCA Average")
   
-  recipient_title <- ASCRIBEE_TITLES[RECIP]
   plot_data <- maptg_data %>% 
     filter(measure == measure_id, ascribee == RECIP) %>%
     mutate(ascribee = ASCRIBEE_TITLES[ascribee]) %>%

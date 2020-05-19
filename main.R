@@ -31,7 +31,7 @@ REPORT_PAL <- c(medicaid=DL_GREEN,
                 Other=DL_GRAY)
 
 ASCRIBEE_TITLES <- c(UMich="Michigan Medicine",
-                     Hurely="Hurley Medical Center",
+                     Hurley="Hurley Medical Center",
                      Munson="Munson Healthcare")
 
 MEASURE_NAMES <- tibble( measure = c("M1", "M2", "M3", "M4", "M5", 
@@ -220,11 +220,11 @@ START_MONTH <- format(START_DATE, "%b")
 END_MONTH <- format(OBS_END_DATE, "%b")
 END_YEAR <- format(OBS_END_DATE, "%Y")
 
-# Set recipient of report
-RECIP <- "UMich"
+# Set recipient of report: UMich or Hurley
+RECIP <- "Hurley"
 
 # Set the flag to show(TRUE) or hide(FALSE) the content identifiers
-INCLUDE_CID <- FALSE
+INCLUDE_CID <- TRUE
 
 ###########################
 # Generate Report Content #

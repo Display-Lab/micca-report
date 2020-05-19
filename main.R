@@ -206,6 +206,9 @@ END_YEAR <- format(OBS_END_DATE, "%Y")
 # Set recipient of report
 RECIP <- "UMich"
 
+# Set the flag to show(TRUE) or hide(FALSE) the content identifiers
+INCLUDE_CID <- FALSE
+
 ###########################
 # Generate Report Content #
 ###########################

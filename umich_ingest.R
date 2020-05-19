@@ -51,7 +51,7 @@ calculate_components <- function(proc_data){
       C8 = sum(contra_choice != "unknown"),
       C9 = sum(contra_choice == "immediate pp iud" | contra_choice == "immediate pp nexplanon"),
       #C10 = sum(contra_choice != "none"), # deprecated
-      C11 = sum(counseling & contra_choice == imm_method),
+      C11 = sum(contra_choice != "unknown" & contra_choice == imm_method),
       C12 = sum(larc_prov == "4-60 days pp visit" | larc_prov == "4-60 days not pp visit"),
       C13 = sum(contra_choice == "immediate pp iud"),
       C14 = sum(contra_choice == "immediate pp nexplanon"),

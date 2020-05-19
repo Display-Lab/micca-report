@@ -176,7 +176,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \ifincludeCID
   \parbox{\textwidth}{ {\tiny \Sexpr{info82C4A3}} \par }
   \fi
-  \parbox{\textwidth}{\centering Contraception Choice}
+  \parbox{\textwidth}{\centering Contraceptive Choice}
   \centering{
   << p2-mid-left, include=TRUE, message=FALSE, echo=FALSE>>=
    # DON"T INCLUDE A CAPTION.  It will bork the environment
@@ -195,7 +195,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{info1903AB}} \par }
   \fi
   \centering
-  Contraception Choice by Insurance Type
+  Contraceptive Choice by Insurance Type
   << p2-mid-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
      fig1903AB
   @

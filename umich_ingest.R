@@ -28,7 +28,7 @@ normalize_umich_data <- function(raw_data){
     filter(!is.na(mrn))  %>%
     mutate_if(.predicate=is.character, tolower) %>%
     mutate(
-      counseling      = ifelse(counseling == 'Yes', TRUE, FALSE),
+      counseling      = ifelse(counseling == 'yes', TRUE, FALSE),
       payer           = sub(pattern = "molina", replacement = "medicaid", payer),
       institution = "UMich" ) %>%
     filter(payer %in% c("medicaid", "molina", "private", "other", "unknown"),

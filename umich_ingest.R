@@ -51,7 +51,7 @@ calculate_components <- function(proc_data){
       C8 = sum(contra_choice != "unknown"),
       C9 = sum(contra_choice == "immediate pp iud" | contra_choice == "immediate pp nexplanon"),
       #C10 = sum(contra_choice != "none"), # deprecated
-      C11 = sum(contra_choice != "unknown" & contra_choice == imm_method),
+      C11 = sum(contra_choice != "unknown" & contra_choice == imm_method & contra_prov == "0-3 days"),
       C12 = sum(larc_prov == "4-60 days pp visit" | larc_prov == "4-60 days not pp visit"),
       C13 = sum(contra_choice == "immediate pp iud"),
       C14 = sum(contra_choice == "immediate pp nexplanon"),
@@ -120,3 +120,19 @@ maptg <- measure_df %>%
 
 # Emit cleaned data to file
 write_csv(maptg, "maptg_umich.csv")
+
+# df_norm %>% 
+#   filter(delivery_date >= ymd("2020-01-01"), delivery_date < ymd("2020-04-01")) %>%
+#   select(counseling, contra_choice, imm_method, contra_prov) %>% 
+#   mutate(
+#     foo = imm_method == contra_choice & contra_prov == '0-3 days',
+#     `0to3`  = contra_prov == "0-3 days",
+#     match   = imm_method == contra_choice,
+#     isOther = contra_choice == "other") %>%
+#   summarize(
+#     matches = sum(match),
+#     matches_0to3 = sum(match & `0to3`),
+#     n_0to3 = sum(`0to3`),
+#     n_foo = sum(foo),
+#     n_rows   = n()) %>%
+#   pivot_longer(cols=everything())

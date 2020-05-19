@@ -96,7 +96,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: TOP %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+\begin{minipage}[t][0.28\textheight][t]{0.5\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
   
@@ -113,7 +113,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
-\begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
+\begin{minipage}[t][0.28\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \ifincludeCID
   \parbox{\textwidth}{ {\tiny \Sexpr{info7F5D31}} \par }
@@ -132,6 +132,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: MIDDLE %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=black,width=\dimexpr\textwidth\relax]
 %% SUBTITLE Spanning entire page
 \begin{minipage}[t][0.02\textheight][t]{\textwidth}
 \centering
@@ -167,10 +168,13 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}
+\end{tcolorbox}
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: BOTTOM %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tcolorbox}[breakable,colback=white,colframe=black,width=\dimexpr\textwidth\relax]
+
 \begin{minipage}[t][0.30\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \ifincludeCID
@@ -203,6 +207,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \makebox[\linewidth]{}
 \end{minipage}
 
+\end{tcolorbox}
 %% PAGE BREAK %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \FloatBarrier

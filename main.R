@@ -351,7 +351,7 @@ pref_pal <- c("Provided"=DL_BLUE, "Preferred"=DL_MAUVE)
 
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
-         measure %in% c("M16","M17","M18","M19"))  %>%
+         measure %in% c("M16","M17","M18"))  %>%
   group_by(measure) %>%
   summarize(numerator = sum(numerator),
             denominator = sum(denominator)) %>%
@@ -360,12 +360,15 @@ plot_data <- maptg_data %>%
          short_name = as.factor(short_name),
          mpos = as.numeric(short_name))
 
+nudge_factor <- (plot_data %>% pull(denominator) %>% max) /20
+
 figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
   geom_bar(aes(y=numerator, color="Provided", fill="Provided"), stat='identity') +
   geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred", fill="Preferred"), 
-                 size=1, linetype=1) +
-  scale_color_manual("foo",values=pref_pal, labels = names(pref_pal)) +
-  scale_fill_manual("foo",values=pref_pal, labels = names(pref_pal)) +
+                 size=1, linetype=3) +
+  geom_text(aes(label=denominator,y=denominator), nudge_y = nudge_factor, size=3 ) +
+  scale_color_manual(name="prov",values=pref_pal) +
+  scale_fill_manual(name="prov",values=pref_pal) +
   theme_minimal() +
   theme(legend.position="right", axis.title.x = element_blank(),
         axis.text.x = element_text(angle=45, hjust=1, face="bold"),
@@ -373,9 +376,10 @@ figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
         legend.key.size = unit(4, "mm") ) +
   #guides(color=guide_legend(override.aes=list(fill="Provided"))) +
   ylab("Number of Women")
+figE8F578
 
 content_id <- deparse(substitute(figE8F578))
-infoE8F578 <- paste(content_id, "m16,17,18,19")
+infoE8F578 <- paste(content_id, "m16,17,18")
 
 ###################
 # Generate Report #

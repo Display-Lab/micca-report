@@ -99,15 +99,19 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 \begin{minipage}[t][0.28\textheight][t]{0.5\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
-  
   % content
    \parbox{\textwidth}{
     \centering
-    \vspace{10mm}
-    \textbf{\Huge \Sexpr{m14_sum}}\par
-    \vspace{2mm}
-    {\small Women in aged 15 -- 44 who had a live birth}\par
-    {\tiny Measure 14}\par
+    Overview for Women Aged 15-44 Who Delivered\\\par
+    \vspace{4mm}
+    \textbf{\Large \Sexpr{m14_sum}}\par
+    Had a live birth\\
+    \vspace{3mm}
+    \textbf{\Large \Sexpr{m5_sum}}\par
+    Received Counseling\\
+    \vspace{3mm}
+    \textbf{\Large \Sexpr{m1_sum}}\par
+    Received Immmediate Contraception\\
   }
   % lower filler
   \vfill
@@ -229,7 +233,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoBDBC81}} \par }
   \fi
   \centering
-  Women who had a live birth and recieve their preferred contraceptive\\
+  Women Who had a Live Birth and Recieved Their Preferred Contraceptive\\
   \vspace{2mm}
     << dbg1, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      figBDBC81
@@ -242,7 +246,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \ifincludeCID
   \parbox{\textwidth}{ {\tiny \Sexpr{infoE8F578}} \par }
   \fi
-  Proportion of contraception preferred and provided\\
+  Proportion of Contraception Preferred and Provided\\
   \centering
     << dbg2, include=TRUE, fig.show='hold', fig.width=4, fig.height=2.8, dev='pdf' >>=
      figE8F578

@@ -187,6 +187,13 @@ line_plot <- function(maptg_data, measure_id){
     theme(legend.position="bottom", legend.box.spacing = unit(0,"mm"))
 }
 
+numerator_sum <- function(maptg_data, measure_id, recipient){
+m14_sum <- maptg_data %>% 
+  filter(measure == measure_id, ascribee == recipient) %>% 
+  pull(numerator) %>% 
+  sum()
+}
+
 ######################
 # Process Input Data #
 ######################
@@ -213,12 +220,11 @@ INCLUDE_CID <- FALSE
 # Generate Report Content #
 ###########################
 
-#### SUM: Women Delievered
-m14_sum <- maptg_data %>% 
-  filter(measure == "M14", ascribee == RECIP) %>% 
-  pull(numerator) %>% 
-  sum()
-
+#### SUMS: OVERVIEW
+m14_sum <- numerator_sum(maptg_data, "M14", RECIP)
+m5_sum <- numerator_sum(maptg_data, "M5", RECIP)
+m1_sum <- numerator_sum(maptg_data, "M1", RECIP)
+  
 #### FIGURE
 plot_data <- maptg_data %>% 
   filter(measure =="M14", ascribee == RECIP) %>%
@@ -376,7 +382,6 @@ figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
         legend.key.size = unit(4, "mm") ) +
   #guides(color=guide_legend(override.aes=list(fill="Provided"))) +
   ylab("Number of Women")
-figE8F578
 
 content_id <- deparse(substitute(figE8F578))
 infoE8F578 <- paste(content_id, "m16,17,18")

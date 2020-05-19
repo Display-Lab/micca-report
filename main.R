@@ -84,8 +84,15 @@ single_line_theme <- function(){
           legend.position = "none")
 }
 
+micca_mean <- function(maptg_data, measure_id){
+  maptg_data %>%
+    filter(measure==measure_id) %>% 
+    summarize(mean = sum(numerator) / sum(denominator)) %>% 
+    pull(mean) 
+}
+
 # Common Circle Plot
-circle_plot <- function(maptg_data, measure_id, middle_label="" ){
+circle_plot <- function(maptg_data, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
   plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
                            ring=c(50,50,58),
                            width=c(16,16,6),
@@ -97,24 +104,82 @@ circle_plot <- function(maptg_data, measure_id, middle_label="" ){
     summarize(
       numerator = sum(numerator, na.rm=TRUE),
       denominator = sum(denominator, na.rm=TRUE),
-      gap = denominator - numerator) %>%
-    pivot_longer(cols=c("denominator","numerator", "gap"), names_to = "obs", values_to = "value") %>%
+      gap = denominator - numerator ) %>%
+    pivot_longer(cols=c("denominator","numerator", "gap"), 
+                 names_to = "obs", values_to = "value") %>%
     left_join(plotting_attrs)
   
   numer <- plot_data %>% filter(obs=="numerator") %>% pull(value)
   denom <- plot_data %>% filter(obs=="denominator") %>% pull(value)
   perf_label <- paste(floor(100*numer/denom), "%",sep="")
     
-  ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
+  fig <- ggplot(plot_data, aes(x=ring, y=value, fill=fill_color, width=width)) +
     geom_col() +
     scale_fill_identity() +
-    scale_x_continuous(limits=c(0,75)) +
+    scale_x_continuous(limits=c(0,70)) +
     coord_polar(theta="y", direction=-1) +
-    dl_annotate("text", x=10, y=denom/2, label=perf_label, size=9, color=DL_DARK_BLUE, fontface=2) +
-    dl_annotate("text", x=8, y=0, label=middle_label, size=2.5, color=DL_DARK_BLUE) +
+    dl_annotate("text", x=5, y=denom/2, label=perf_label, size=9, color=DL_DARK_BLUE, fontface=2) +
     dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
                 size=4, color=DL_DARK_BLUE) +
     top_performer_theme()
+  
+  if(!is.null(benchmark)){
+    # scale benchmark to observed denominator and invert to accomodate polor coordiate direction=-1
+    bench_val <- plot_data %>% filter(obs=="denominator") %>% pull(value) * (1-benchmark)
+    
+    fig <- fig +
+      scale_x_continuous(limits=c(0,95)) +
+      geom_segment(aes(x=40, y = bench_val, xend = 65, yend = bench_val),
+                 linetype="dashed", color=DL_GREEN) +
+      dl_annotate("text", x=77, y=bench_val, label=benchmark_label,
+                size=2.5, color=DL_BLUE)
+  }
+  fig
+}
+
+# Common Line Plot
+line_plot <- function(maptg_data, measure_id){
+  micca_data <- maptg_data %>% 
+    filter(measure == measure_id) %>%
+    group_by(time) %>%
+    summarize(
+      numerator = sum(numerator, na.rm=TRUE),
+      denominator = sum(denominator, na.rm=TRUE),
+      rate = numerator/denominator,
+      ascribee = "MICCA")
+  
+  plot_data <- maptg_data %>% 
+    filter(measure == measure_id, ascribee == RECIP) %>%
+    bind_rows(micca_data) %>%
+    group_by(ascribee, time) %>%
+    summarize(
+      numerator = sum(numerator, na.rm=TRUE),
+      denominator = sum(denominator, na.rm=TRUE),
+      rate = numerator/denominator) %>%
+    mutate(
+      recipient = ifelse(ascribee == RECIP, T, F),
+      perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
+      arrow = ifelse(recipient, "show", "noshow"),
+      pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
+      ) 
+  
+  # y axis labels
+  breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
+  labels_y <- c("20%", "40%", "60%", "80%", "100%")
+  
+  ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
+    geom_line(size=1, lineend="round") +
+    geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
+    scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
+    scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
+    scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
+    geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_DARK_BLUE) +
+    geom_label(mapping = aes(label=perf_label), nudge_y = 0.13, fill=DL_DARK_BLUE,
+               color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
+    single_line_theme() +
+    scale_color_manual(labels = unique(plot_data$ascribee), 
+                       values = unique(plot_data$pcolor), guide = guide_legend(title=NULL)) +
+    theme(legend.position="bottom", legend.box.spacing = unit(0,"mm"))
 }
 
 ######################
@@ -134,7 +199,7 @@ END_MONTH <- format(END_DATE, "%b")
 END_YEAR <- format(END_DATE, "%Y")
 
 # Set recipient of report
-RECIP <- "Hurley"
+RECIP <- "UMich"
 
 ###########################
 # Generate Report Content #
@@ -163,55 +228,27 @@ fig7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   theme(legend.position="bottom",  axis.title.x = element_blank(),
         legend.title = element_blank(), legend.box.spacing = unit(0,"mm")) 
  fig7F5D31 
+ 
 content_id <- deparse(substitute(fig7F5D31))
-info7F5D3 <- paste(content_id, "m14")
+info7F5D31 <- paste(content_id, "m14")
 
 #### FIGURE
-figADA835A <- circle_plot(maptg_data, "M1", "")
+plot_mean <- micca_mean(maptg_data, "M1")
+figADA835A <- circle_plot(maptg_data, "M1", plot_mean)
+
 content_id <- deparse(substitute(fig7F5D31))
 infoADA835A <- paste(content_id, "m1")
 
 #### FIGURE
-plot_data <- maptg_data %>% 
-  filter(measure == "M1", ascribee == RECIP) %>%
-  group_by(ascribee, time, measure) %>%
-  summarize(
-    numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(denominator, na.rm=TRUE),
-    rate = numerator/denominator) %>%
-  mutate(
-    recipient = ifelse(ascribee == RECIP, T, F),
-    perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
-    arrow = ifelse(recipient, "show", "noshow"),
-    pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
-    ) 
-
-# y axis labels
-breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
-labels_y <- c("20%", "40%", "60%", "80%", "100%")
-  
-fig707A6E <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
-  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_DARK_BLUE) +
-  geom_line(size=1, lineend="round") +
-  geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
-  scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
-  scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
-  scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
-  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_DARK_BLUE,
-             color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
-  single_line_theme() +
-  scale_color_manual(labels = plot_data$ascribee, 
-                     values = plot_data$pcolor, guide = guide_legend(title=NULL)) +
-  theme(legend.position="bottom")
+fig707A6E <- line_plot(maptg_data, "M1")
 
 content_id <- deparse(substitute(fig707A6E))
 info707A6E <- paste(content_id, "m1")
 
-content_id <- deparse(substitute(fig7F5D31))
-info7F5D3 <- paste(content_id, "m14")
-
 #### FIGURE
-fig9C0A4F <- circle_plot(maptg_data, "M3", "")
+plot_mean <- micca_mean(maptg_data, "M3")
+fig9C0A4F <- circle_plot(maptg_data, "M3", plot_mean)
+
 content_id <- deparse(substitute(fig9C0A4F))
 info9C0A4F <- paste(content_id, "m3")
 
@@ -241,48 +278,20 @@ content_id <- deparse(substitute(figBE214E))
 infoBE214E <- paste(content_id, "m20,21")
 
 #### FIGURE
-fig540727 <- circle_plot(maptg_data, "M5", "")
+plot_mean <- micca_mean(maptg_data, "M5")
+fig540727 <- circle_plot(maptg_data, "M5", plot_mean)
+
 content_id <- deparse(substitute(fig540727))
 info540727 <- paste(content_id, "m5")
 
 #### FIGURE
-plot_data <- maptg_data %>% 
-  filter(measure == "M5", ascribee == RECIP) %>%
-  group_by(ascribee,time, measure) %>%
-  summarize(
-    numerator = sum(numerator, na.rm=TRUE),
-    denominator = sum(denominator, na.rm=TRUE),
-    rate = numerator/denominator) %>%
-  mutate(
-    recipient = ifelse(ascribee == RECIP, T, F),
-    perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
-    arrow = ifelse(recipient, "show", "noshow"),
-    pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
-    ) 
-
-# y axis labels
-breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
-labels_y <- c("20%", "40%", "60%", "80%", "100%")
-  
-fig5BF5D0 <- ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
-  geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=DL_DARK_BLUE) +
-  geom_line(size=1, lineend="round") +
-  geom_point(size=2, fill=DL_FILL, shape=21, stroke=1.2) +
-  scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
-  scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
-  scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
-  geom_label(mapping = aes(label=perf_label), nudge_y = 0.1, fill=DL_DARK_BLUE,
-             color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
-  single_line_theme() +
-  scale_color_manual(labels = plot_data$ascribee, 
-                     values = plot_data$pcolor, guide = guide_legend(title=NULL)) +
-  theme(legend.position="bottom")
+fig5BF5D0 <- line_plot(maptg_data, "M5")
 
 content_id <- deparse(substitute(fig5BF5D0))
 info5BF5D0 <- paste(content_id, "m5")
 
 #### TABLE DATA
-tbl_82C4A3 <- maptg_data %>% 
+tbl82C4A3 <- maptg_data %>% 
   filter(ascribee == RECIP,
          measure %in% c("M10", "M11","M12","M13")) %>%
   group_by(measure) %>%
@@ -293,6 +302,9 @@ tbl_82C4A3 <- maptg_data %>%
   left_join(MEASURE_NAMES, by="measure") %>%
   select(short_name, numerator, percent) %>%
   rename(Choice=short_name, Count=numerator, Percentage=percent )
+
+content_id <- deparse(substitute(tbl82C4A3))
+info82C4A3 <- paste(content_id, "m10,11,12,13")
 
 #### FIGURE
 # Preference of LARC by payer
@@ -320,12 +332,14 @@ content_id <- deparse(substitute(fig1903AB))
 info1903AB <- paste(content_id, "m10,11,12,13")
 
 #### FIGURE
-figBDBC81 <- circle_plot(maptg_data, "M8", "")
+plot_mean <- micca_mean(maptg_data, "M8")
+figBDBC81 <- circle_plot(maptg_data, "M8", plot_mean)
+
 content_id <- deparse(substitute(figBDBC81))
 infoBDBC81 <- paste(content_id, "m8")
 
 #### FIGURE
-pref_pal <- c("Provided"=DL_DARK_BLUE, "Preferred"=DL_MAUVE)
+pref_pal <- c("Provided"=DL_BLUE, "Preferred"=DL_MAUVE)
 
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
@@ -340,7 +354,8 @@ plot_data <- maptg_data %>%
 
 figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
   geom_bar(aes(y=numerator, color="Provided", fill="Provided"), stat='identity') +
-  geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred", fill="Preferred"), size=3) +
+  geom_linerange(aes(y=denominator, xmin=mpos-0.4, xmax=mpos+0.4, color="Preferred", fill="Preferred"), 
+                 size=1, linetype=1) +
   scale_color_manual("foo",values=pref_pal, labels = names(pref_pal)) +
   scale_fill_manual("foo",values=pref_pal, labels = names(pref_pal)) +
   theme_minimal() +

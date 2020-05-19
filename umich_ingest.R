@@ -7,8 +7,6 @@ library(stringr)
 library(zoo)
 
 read_umich_data <- function(filename){
-  
-  # Ingest hurley data
   col_classes <- cols_only(col_character(), col_date(), col_character(),
                            col_character(),col_character(),col_character(),
                            col_character(),col_character(),col_character(),

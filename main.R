@@ -30,6 +30,10 @@ REPORT_PAL <- c(medicaid=DL_GREEN,
                 PPTL=DL_LIGHT_BLUE,
                 Other=DL_GRAY)
 
+ASCRIBEE_TITLES <- c(UMich="Michgan Medicine",
+                     Hurely="Hurley Medical Center",
+                     Munson="Munson Healthcare")
+
 MEASURE_NAMES <- tibble( measure = c("M1", "M2", "M3", "M4", "M5", 
                                      "M6", "M7", "M8", "M9", "M10",
                                      "M11", "M12", "M13", "M14", "M15", 
@@ -146,10 +150,12 @@ line_plot <- function(maptg_data, measure_id){
       numerator = sum(numerator, na.rm=TRUE),
       denominator = sum(denominator, na.rm=TRUE),
       rate = numerator/denominator,
-      ascribee = "MICCA")
+      ascribee = "MICCA Average")
   
+  recipient_title <- ASCRIBEE_TITLES[RECIP]
   plot_data <- maptg_data %>% 
     filter(measure == measure_id, ascribee == RECIP) %>%
+    mutate(ascribee = ASCRIBEE_TITLES[ascribee]) %>%
     bind_rows(micca_data) %>%
     group_by(ascribee, time) %>%
     summarize(
@@ -157,11 +163,10 @@ line_plot <- function(maptg_data, measure_id){
       denominator = sum(denominator, na.rm=TRUE),
       rate = numerator/denominator) %>%
     mutate(
-      recipient = ifelse(ascribee == RECIP, T, F),
+      recipient = ifelse(ascribee == recipient_title, T, F),
       perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
       arrow = ifelse(recipient, "show", "noshow"),
-      pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)
-      ) 
+      pcolor = ifelse(recipient, DL_DARK_BLUE, DL_GRAY)) 
   
   # y axis labels
   breaks_y <- c(0.20, 0.4, 0.6, 0.8, 1.0)
@@ -195,8 +200,8 @@ maptg_data <- full_maptg_data %>% filter( time >= START_DATE, time < END_DATE)
 OBS_END_DATE <- maptg_data$time %>% max
 
 START_MONTH <- format(START_DATE, "%b")
-END_MONTH <- format(END_DATE, "%b")
-END_YEAR <- format(END_DATE, "%Y")
+END_MONTH <- format(OBS_END_DATE, "%b")
+END_YEAR <- format(OBS_END_DATE, "%Y")
 
 # Set recipient of report
 RECIP <- "UMich"

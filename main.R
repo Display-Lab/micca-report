@@ -223,7 +223,7 @@ END_MONTH <- format(OBS_END_DATE, "%b")
 END_YEAR <- format(OBS_END_DATE, "%Y")
 
 # Set recipient of report: UMich or Hurley
-RECIP <- "UMich"
+RECIP <- "Hurley"
 
 # Set the flag to show(TRUE) or hide(FALSE) the content identifiers
 INCLUDE_CID <- FALSE
@@ -371,7 +371,7 @@ pref_pal <- c("Provided"=DL_BLUE, "Preferred"=DL_MAUVE)
 
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
-         measure %in% c("M16","M17","M18"))  %>%
+         measure %in% c("M16","M17","M18", "M19"))  %>%
   group_by(measure) %>%
   summarize(numerator = sum(numerator),
             denominator = sum(denominator)) %>%
@@ -398,7 +398,7 @@ figE8F578 <- ggplot(plot_data, aes(x=short_name)) +
   ylab("Number of Women")
 
 content_id <- deparse(substitute(figE8F578))
-infoE8F578 <- paste(content_id, "m16,17,18")
+infoE8F578 <- paste(content_id, "m16,17,18,19")
 
 ###################
 # Generate Report #

@@ -89,7 +89,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.07\textheight][t]{\textwidth}
 \centering
-\Large MICCA Quarterly Report for \Sexpr{ASCRIBEE_TITLES[RECIP]} Jan - Apr 2020
+\Large MICCA Quarterly Report for \Sexpr{ASCRIBEE_TITLES[RECIP]} \Sexpr{START_MONTH} - \Sexpr{END_MONTH} \Sexpr{END_YEAR}
 \end{minipage}
 
 \nointerlineskip
@@ -111,7 +111,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
     Received Counseling\\
     \vspace{3mm}
     \textbf{\Large \Sexpr{m1_sum}}\par
-    Received Immmediate Contraception\\
+    Received Immediate Contraception\\
   }
   % lower filler
   \vfill
@@ -151,7 +151,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{info540727}} \par }
   \fi
   \centering
-  Recieved Prenatal Counseling\\
+  Received Prenatal Counseling\\
   \vspace{2mm}
     << p2-top-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      fig540727
@@ -223,7 +223,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %% SUBTITLE Spanning entire page
 \begin{minipage}[t][0.02\textheight][t]{\textwidth}
 \centering
-\textbf{Preferred Method Provided}
+\textbf{Preferred Method Provided (0-3 days)}
 \end{minipage}
 
 \nointerlineskip
@@ -233,7 +233,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoBDBC81}} \par }
   \fi
   \centering
-  Women Who had a Live Birth and Recieved Their Preferred Contraceptive\\
+  Women Who had a Live Birth and Received Their Preferred Contraceptive\\
   \vspace{2mm}
     << dbg1, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      figBDBC81
@@ -274,7 +274,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoADA835A}} \par }
   \fi
   \centering
-  Overall Rate\\
+  Overall Rate (LARC+PPTL+Other)\\
     << p1-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      figADA835A
     @

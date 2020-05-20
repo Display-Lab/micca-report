@@ -28,7 +28,9 @@ REPORT_PAL <- c(medicaid=DL_GREEN,
                 IUD=DL_DARK_BLUE,
                 Nexplanon=DL_BLUE,
                 PPTL=DL_LIGHT_BLUE,
-                Other=DL_GRAY)
+                Other=DL_GRAY,
+                Medicaid=DL_GREEN,
+                'non-Medicaid'=DL_MAUVE)
 
 ASCRIBEE_TITLES <- c(UMich="Michigan Medicine",
                      Hurley="Hurley Medical Center",
@@ -221,10 +223,10 @@ END_MONTH <- format(OBS_END_DATE, "%b")
 END_YEAR <- format(OBS_END_DATE, "%Y")
 
 # Set recipient of report: UMich or Hurley
-RECIP <- "Hurley"
+RECIP <- "UMich"
 
 # Set the flag to show(TRUE) or hide(FALSE) the content identifiers
-INCLUDE_CID <- TRUE
+INCLUDE_CID <- FALSE
 
 ###########################
 # Generate Report Content #
@@ -238,6 +240,7 @@ m1_sum <- numerator_sum(maptg_data, "M1", RECIP)
 #### FIGURE
 plot_data <- maptg_data %>% 
   filter(measure =="M14", ascribee == RECIP) %>%
+  mutate(group=recode(group, "medicaid"="Medicaid","non_medicaid"="non-Medicaid")) %>%
   group_by(time) %>%
   mutate(denominator = sum(numerator),
          payer_rate = numerator/denominator)
@@ -251,7 +254,6 @@ fig7F5D31 <- ggplot(plot_data, aes(x=time, y=payer_rate)) +
   theme_minimal() +
   theme(legend.position="bottom",  axis.title.x = element_blank(),
         legend.title = element_blank(), legend.box.spacing = unit(0,"mm")) 
- fig7F5D31 
  
 content_id <- deparse(substitute(fig7F5D31))
 info7F5D31 <- paste(content_id, "m14")
@@ -281,6 +283,7 @@ info9C0A4F <- paste(content_id, "m3")
 ## TODO side by side figures facetted together or cowplotted
 plot_data <- maptg_data %>% 
   filter(measure %in% c("M20", "M21"), ascribee == RECIP) %>%
+  mutate(group=recode(group, "medicaid"="Medicaid","non_medicaid"="non-Medicaid")) %>%
   group_by(group, measure) %>%
   summarize(numerator = sum(numerator),
             denominator = sum(pull(., numerator))) %>%
@@ -335,6 +338,7 @@ info82C4A3 <- paste(content_id, "m10,11,12,13")
 plot_data <- maptg_data %>% 
   filter(ascribee == RECIP,
          measure %in% c("M10", "M11","M12","M13"))  %>%
+  mutate(group=recode(group, "medicaid"="Medicaid","non_medicaid"="non-Medicaid")) %>%
   group_by(group, measure) %>%
   summarize(numerator = sum(numerator),
             denominator = sum(denominator)) %>%

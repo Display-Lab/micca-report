@@ -28,6 +28,7 @@ normalize_umich_data <- function(raw_data){
     mutate(
       counseling      = ifelse(counseling == 'yes', TRUE, FALSE),
       payer           = sub(pattern = "molina", replacement = "medicaid", payer),
+      contra_choice   = ifelse(choice_date == "unknown", "unknown", contra_choice),
       institution = "UMich" ) %>%
     filter(payer %in% c("medicaid", "molina", "private", "other", "unknown"),
            contra_choice %in% c("immediate pp iud", "immediate pp nexplanon", "pptl", "other", "none", "unknown")) %>%
@@ -136,3 +137,8 @@ write_csv(maptg, "maptg_umich.csv")
 #     n_foo = sum(foo),
 #     n_rows   = n()) %>%
 #   pivot_longer(cols=everything())
+
+#df_norm %>% 
+#  filter(delivery_date >= ymd("2020-01-01"), delivery_date < ymd("2020-04-01")) %>%
+#  select(contra_choice, choice_date) %>%
+#  filter(choice_date == 'unknown') %>% pull(contra_choice) %>% unique()

@@ -14,7 +14,9 @@ source('common_functions.R')
 nameit <- function(){paste0('fig', paste0(sample(c(0:9, LETTERS[1:6]), 6, T), collapse=''))}
 
 # Generate Report Content
-main <- function(maptg_data, recip){
+# @param recip string recipient of report: UMich, Hurley, Munson, WMH
+# @param include_cid  boolean flag to show(TRUE) or hide(FALSE) the content identifiers
+main <- function(maptg_data, recip, output_path='report.pdf'){
   
   ##### REPORT ENV SETUP
   obs_end_date <- maptg_data$time %>% max
@@ -197,7 +199,6 @@ main <- function(maptg_data, recip){
   # Generate Report
   template_path <- "report.Rnw"
   
-  output_path <- "report.pdf"
   build_dir <- tempdir()
   
   options(tinytex.engine="pdflatex")
@@ -205,6 +206,8 @@ main <- function(maptg_data, recip){
   
   # TODO: Build report_env to directly control what variables are accessible in the report.
   #knitr::knit2pdf(input = template_path, envir=report_env, pdf_file= output_path)
+  
+  return(invisible(NULL))
 } 
 
 ######################
@@ -218,6 +221,22 @@ END_DATE <- lubridate::ymd('2020-04-01')
 trimmed_data <- full_maptg_data %>% filter( time >= START_DATE, time < END_DATE)
 
 
-# @param recip string recipient of report: UMich, Hurley, Munson, WMH
-# @param include_cid  boolean flag to show(TRUE) or hide(FALSE) the content identifiers
-main(trimmed_data, recip="Hurley")
+########################
+# Generate ALL Reports #
+########################
+
+report_path <- function(recip){
+  base <- paste("report", strftime(now(), format="%Y-%m-%d_%H%M"), recip, sep="_")
+  output_path <- paste(base, ".pdf", sep="")
+}
+
+main_mwrap <- function(recipient, outpath, data){ 
+  main(data, recipient, outpath) 
+}
+
+recipients <- trimmed_data %>% pull(ascribee) %>% unique()
+output_paths <- sapply(recipients, report_path)
+
+mapply(main_mwrap, recipients, output_paths, MoreArgs=list(data=trimmed_data) )
+
+#main(trimmed_data, recip="Hurley")

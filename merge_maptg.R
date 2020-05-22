@@ -9,7 +9,9 @@ maptg_colspec <- cols(ascribee = col_character(),
                       denominator = col_integer())
   
 maptg_files <- c('data/maptg_hurley_2020_Q1.csv',
-                'data/maptg_umich.csv')
+                 'data/maptg_munson_2020_Q1.csv',
+                 'data/maptg_wmh_2020_Q1.csv',
+                 'data/maptg_umich.csv')
 
 df_list <- lapply(maptg_files, read_csv, col_types=maptg_colspec)
 

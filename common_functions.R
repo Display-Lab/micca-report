@@ -51,14 +51,14 @@ micca_mean <- function(maptg_data, measure_id){
 }
 
 # Common Circle Plot
-circle_plot <- function(maptg_data, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
+circle_plot <- function(maptg_data, recip, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
   plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
                            ring=c(50,50,58),
                            width=c(16,16,6),
                            fill_color=c(DL_DARK_BLUE, DL_LIGHT_BLUE, DL_LIGHT_BLUE))
   
   plot_data <- maptg_data %>% 
-    filter(measure == measure_id, ascribee == RECIP) %>%
+    filter(measure == measure_id, ascribee == recip) %>%
     group_by(measure) %>%
     summarize(
       numerator = sum(numerator, na.rm=TRUE),
@@ -97,8 +97,8 @@ circle_plot <- function(maptg_data, measure_id, benchmark=NULL, benchmark_label=
 }
 
 # Common Line Plot
-line_plot <- function(maptg_data, measure_id){
-  recipient_title <- ASCRIBEE_TITLES[RECIP]
+line_plot <- function(maptg_data, recip, measure_id){
+  recipient_title <- ASCRIBEE_TITLES[recip]
   
   micca_data <- maptg_data %>% 
     filter(measure == measure_id) %>%
@@ -116,7 +116,7 @@ line_plot <- function(maptg_data, measure_id){
       ascribee = "MICCA Average")
   
   plot_data <- maptg_data %>% 
-    filter(measure == measure_id, ascribee == RECIP) %>%
+    filter(measure == measure_id, ascribee == recip) %>%
     mutate(ascribee = ASCRIBEE_TITLES[ascribee]) %>%
     bind_rows(micca_data) %>%
     group_by(ascribee, time) %>%

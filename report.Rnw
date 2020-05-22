@@ -89,7 +89,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.07\textheight][t]{\textwidth}
 \centering
-\Large MICCA Quarterly Report for \Sexpr{ASCRIBEE_TITLES[RECIP]} \Sexpr{START_MONTH} - \Sexpr{END_MONTH} \Sexpr{END_YEAR}
+\Large MICCA Quarterly Report for \Sexpr{ASCRIBEE_TITLE} \Sexpr{START_MONTH} - \Sexpr{END_MONTH} \Sexpr{END_YEAR}
 \end{minipage}
 
 \nointerlineskip

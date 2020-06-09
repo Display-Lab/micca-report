@@ -26,7 +26,7 @@ main <- function(maptg_data, recip, output_path='report.pdf'){
   END_MONTH <- format(obs_end_date, "%b")
   END_YEAR <- format(obs_end_date, "%Y")
   INCLUDE_CID=FALSE
-  ASCRIBEE_TITLE <- ASCRIBEE_TITLES[recip]
+  ASCRIBEE_TITLE <- ifelse(is.na(ASCRIBEE_TITLES[recip]), recip, ASCRIBEE_TITLES[recip])
   
   #### SUMS: OVERVIEW
   m14_sum <- numerator_sum(maptg_data, "M14", recip)

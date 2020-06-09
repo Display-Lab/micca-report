@@ -22,7 +22,7 @@ read_wmh_data <- function(filename){
                  "contra_prov","larc_prov","payer","choice_date","peripartum_care")
   
   # Need to skip the first 19 rows where they've reproduced the example spreadsheet as reference.
-  raw_data <- readr::read_csv(filename, col_types = col_classes, col_names=FALSE, na=c(""), skip=19)
+  raw_data <- readr::read_csv(filename, col_types = col_classes, col_names=FALSE, na=c(""), skip=9)
   colnames(raw_data) <- col_names
   return(raw_data)
 }

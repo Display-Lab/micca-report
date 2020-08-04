@@ -15,6 +15,7 @@
 *tikzDictionary
 
 # Data files
+site_data/*
 data/*
 *.csv
 

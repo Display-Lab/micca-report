@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^data/*
-^site-data/*
-^utils/*
+^proc-data/.*
+^site-data/.*
+^utils/.*
 
 ^scratch.r$

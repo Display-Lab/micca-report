@@ -1,0 +1,10 @@
+Package: miccareport
+Type: Package
+Title: MICCA Report Generator
+Version: 0.2.0
+Author: Display Lab
+Maintainer: Display Lab <display-lab@umich.edu>
+Description: Using MAPTG data, generate pdf reports for each site of the MICCA organization.
+License: GNU GPLv3
+Encoding: UTF-8
+LazyData: true

@@ -1,13 +1,7 @@
-library(dplyr)
-library(tidyr)
-library(tibble)
-library(lubridate)
-library(stringr)
-library(zoo)
-
 # Calculate components and measures common functions
+#' @import dplyr tidyr tibble lubridate stringr zoo
 calculate_components <- function(proc_data){
-  proc_data %>% 
+  proc_data %>%
     mutate(report_month = floor_date(delivery_date, unit="month"),
            quarter = as.yearqtr(delivery_date)) %>%
     group_by(report_month, payer) %>%
@@ -37,6 +31,7 @@ calculate_components <- function(proc_data){
     )
 }
 
+#' @import dplyr tidyr tibble lubridate stringr zoo
 calculate_measures <- function(component_data){
   component_data %>%
     group_by(report_month, payer) %>%
@@ -63,17 +58,18 @@ calculate_measures <- function(component_data){
       n_M19 = C20, d_M19 = C16,
       n_M20 = C21, d_M20 = C3,
       n_M21 = C22, d_M21 = C3 ) %>%
-      pivot_longer(cols = starts_with("n_"), names_to = "measure_n", 
-                   names_prefix = "n_", values_to = "numerator") %>% 
-      pivot_longer(cols = starts_with("d_"), names_to = "measure_d", 
+      pivot_longer(cols = starts_with("n_"), names_to = "measure_n",
+                   names_prefix = "n_", values_to = "numerator") %>%
+      pivot_longer(cols = starts_with("d_"), names_to = "measure_d",
                    names_prefix = "d_", values_to = "denominator") %>%
       filter(measure_n == measure_d) %>%
       rename( measure = measure_n ) %>%
       select(-measure_d)
 }
 
+#' @import dplyr tidyr tibble lubridate stringr zoo
 make_maptg <- function(measure_data, institution){
-  measure_data %>% 
+  measure_data %>%
     rename(time=report_month) %>%
     mutate(group = ifelse(group !="medicaid", "non_medicaid", group)) %>%
     add_column(ascribee=institution, .before=1)

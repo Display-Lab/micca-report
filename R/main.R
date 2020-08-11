@@ -1,7 +1,9 @@
 #' Generate report content for single site.
 #' @param recip string recipient of report: UMich, Hurley, Munson, WMH
 #' @param include_cid  boolean flag to show(TRUE) or hide(FALSE) the content identifiers
-#' @import knitr tikzDevice readr ggplot2 dplyr stringr tidyr kableExtra
+#' @import knitr tikzDevice readr ggplot2 stringr tidyr kableExtra
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter mutate group_by
 main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
 
   ##### REPORT ENV SETUP

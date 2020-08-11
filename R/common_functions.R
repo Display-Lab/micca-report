@@ -108,7 +108,7 @@ circle_plot <- function(maptg_data, recip, measure_id, benchmark=NULL, benchmark
 # Common Line Plot
 #' @import dplyr
 line_plot <- function(maptg_data, recip, measure_id){
-  recipient_title <- ASCRIBEE_TITLES[recip]
+  recipient_title <- MR$ASCRIBEE_TITLES[recip]
 
   micca_data <- maptg_data %>%
     filter(measure == measure_id) %>%
@@ -127,7 +127,7 @@ line_plot <- function(maptg_data, recip, measure_id){
 
   plot_data <- maptg_data %>%
     filter(measure == measure_id, ascribee == recip) %>%
-    mutate(ascribee = ASCRIBEE_TITLES[ascribee]) %>%
+    mutate(ascribee = MR$ASCRIBEE_TITLES[ascribee]) %>%
     bind_rows(micca_data) %>%
     group_by(ascribee, time) %>%
     summarize(
@@ -152,7 +152,7 @@ line_plot <- function(maptg_data, recip, measure_id){
     scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
     geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=MR$DL_DARK_BLUE) +
     geom_label(mapping = aes(label=perf_label), nudge_y = 0.13, fill=MR$DL_DARK_BLUE,
-               color=DL_FILL, label.r = unit(0, "lines"), label.size=0) +
+               color=MR$DL_FILL, label.r = unit(0, "lines"), label.size=0) +
     single_line_theme() +
     scale_color_manual(labels = unique(plot_data$ascribee),
                        values = unique(plot_data$pcolor), guide = guide_legend(title=NULL)) +

@@ -28,7 +28,7 @@ MR$ASCRIBEE_TITLES <- c(UMich="Michigan Medicine",
                         Munson="Munson Healthcare")
 
 
-#' @import tibble
+#' @importFrom tibble tibble
 make_measure_names <- function(){
   tibble::tibble( measure = c("M1", "M2", "M3", "M4", "M5",
                       "M6", "M7", "M8", "M9", "M10",

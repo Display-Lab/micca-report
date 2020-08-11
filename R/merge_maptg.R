@@ -1,4 +1,5 @@
 #' Combine maptg data sets from multiple sites
+#' @note DEPRECATED
 #' @import readr dplyr
 merge_maptg_files <- function(){
   maptg_colspec <- cols(ascribee = col_character(),

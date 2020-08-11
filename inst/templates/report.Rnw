@@ -29,7 +29,7 @@
 % TODO %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % Calculate the title date range
- 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DEBUGGING TOOLS %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +43,7 @@
 \newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}
 
 % Only if the base font of the document is to be sans serif
-\renewcommand*\familydefault{\sfdefault} 
+\renewcommand*\familydefault{\sfdefault}
 
  % an empty environment to be redefined in TeX
 \newenvironment{manualout}{}{}
@@ -89,7 +89,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{minipage}[t][0.07\textheight][t]{\textwidth}
 \centering
-\Large MICCA Quarterly Report for \Sexpr{ASCRIBEE_TITLE} \Sexpr{START_MONTH} - \Sexpr{END_MONTH} \Sexpr{END_YEAR}
+\Large MICCA Quarterly Report for \Sexpr{ascribee_title} \Sexpr{start_month} - \Sexpr{end_month} \Sexpr{end_year}
 \end{minipage}
 
 \nointerlineskip
@@ -146,7 +146,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 \begin{minipage}[t][0.26\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \captionsetup{margin=.5cm}
-  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt} 
+  \setlength{\abovecaptionskip}{-10pt plus 3pt minus 2pt}
   \ifincludeCID
   \parbox{\textwidth}{ {\tiny \Sexpr{info540727}} \par }
   \fi
@@ -173,7 +173,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \makebox[\linewidth]{}
 \end{minipage}
 \end{tcolorbox}
-  
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: BOTTOM %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,7 +196,7 @@ if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
                booktabs=T, format="latex")  %>%
   kable_styling(font_size = 14) %>%
   row_spec(0, bold=T)
-  
+
   @
   }
   \vfill

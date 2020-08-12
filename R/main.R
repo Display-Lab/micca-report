@@ -84,15 +84,16 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
   infoE8F578 <- paste(content_id, "m16,17,18,19")
 
   # Generate Report
-  template_path <- system.file("templates","report_v1.Rnw", package="miccareport")
-
+  template_path <- system.file("templates","report_v2.Rnw", package="miccareport")
   build_dir <- tempdir()
 
   options(tinytex.engine="pdflatex")
-  knitr::knit2pdf(input = template_path, pdf_file=output_path, clean=TRUE)
-
-  # TODO: Build report_env to directly control what variables are accessible in the report.
-  #knitr::knit2pdf(input = template_path, envir=report_env, pdf_file= output_path)
+  suppressMessages(
+    utils::capture.output(
+      knitr::knit2pdf(input = template_path,
+                      #envir=report_env,
+                      pdf_file= output_path)
+   ))
 
   return(invisible(NULL))
 }

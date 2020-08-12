@@ -67,15 +67,15 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
 # Work around for "xcolor Warning: Incompatible color definition"
 knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
 # Default include content identifiers to FALSE
-if(!exists('INCLUDE_CID')){
-  INCLUDE_CID <- FALSE
+if(!exists('include_cid')){
+  include_cid <- FALSE
   }
 @
 
 % Setup conditional to include latex content for content identifiers
 \newif\ifincludeCID
 <<has_CID_tex, include=TRUE, eval=TRUE, echo=FALSE, results='asis'>>=
-if(INCLUDE_CID){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
+if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 @
 
 

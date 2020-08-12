@@ -96,37 +96,42 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: TOP %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{minipage}[t][0.28\textheight][t]{0.5\textwidth}
+\centering
+{\LARGE Overview for Women Aged 15-44 Who Delivered}\\\par
+
+\begin{minipage}[t][0.23\textheight][t]{0.3\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
   % content
-   \parbox{\textwidth}{
+  \parbox{\textwidth}{
     \centering
-    Overview for Women Aged 15-44 Who Delivered\\\par
-    \vspace{4mm}
-    \textbf{\Large \Sexpr{m14_sum}}\par
+    \vspace{1cm}
+    \textbf{\huge \Sexpr{m14_sum}}\par
     Had a live birth\\
-    \vspace{3mm}
-    \textbf{\Large \Sexpr{m5_sum}}\par
-    Received Counseling\\
-    \vspace{3mm}
-    \textbf{\Large \Sexpr{m1_sum}}\par
-    Received Immediate Contraception\\
   }
   % lower filler
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
-\begin{minipage}[t][0.28\textheight][t]{0.5\textwidth}
+\begin{minipage}[t][0.23\textheight][t]{0.3\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  \ifincludeCID
-  \parbox{\textwidth}{ {\tiny \Sexpr{info7F5D31}} \par }
-  \fi
-  \centering
-  Payer Proportion of Deliveries
-    << p1-top-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=2.7, dev='pdf' >>=
-    fig7F5D31
-    @
+  \parbox{\textwidth}{
+    \centering
+    \vspace{1cm}
+    \textbf{\huge \Sexpr{m5_sum}}\par
+    Received Counseling\\
+  }
+  \vfill
+  \makebox[\textwidth]{}
+\end{minipage}\hfill
+\begin{minipage}[t][0.23\textheight][t]{0.3\textwidth}
+  \strut\vspace*{-\baselineskip}\newline
+  \parbox{\textwidth}{
+    \centering
+    \vspace{1cm}
+    \textbf{\huge \Sexpr{m1_sum}}\par
+    Received Immediate Contraception\\
+  }
   \vfill
   \makebox[\textwidth]{}
 \end{minipage}

@@ -4,86 +4,38 @@
 #' @import knitr tikzDevice readr ggplot2 dplyr stringr tidyr kableExtra
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter mutate group_by
+#' @importFrom rlang new_environment base_env
 main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
 
-  ##### REPORT ENV SETUP
-  obs_end_date <- maptg_data$time %>% max
+  #### TOP LEVEL REPORT ENV SETUP
+  # Include packages required for running report.
+  top_env <- report_environment()
+
+  obs_end_date   <- maptg_data$time %>% max
   obs_start_date <- maptg_data$time %>% min
 
-  start_month <- format(obs_start_date, "%b")
-  end_month <- format(obs_end_date, "%b")
-  end_year <- format(obs_end_date, "%Y")
-  ascribee_title <- ifelse(is.na(MR$ASCRIBEE_TITLES[recip]), recip, MR$ASCRIBEE_TITLES[recip])
+  top_env$start_month <- format(obs_start_date, "%b")
+  top_env$end_month   <- format(obs_end_date, "%b")
+  top_env$end_year    <- format(obs_end_date, "%Y")
+
+  if( is.na(MR$ASCRIBEE_TITLES[recip]) ){
+    top_env$ascribee_title <- recip
+  } else {
+    top_env$ascribee_title <- MR$ASCRIBEE_TITLES[recip]
+  }
 
   #### SUMS: OVERVIEW
-  m14_sum <- numerator_sum(maptg_data, "M14", recip)
-  m5_sum <- numerator_sum(maptg_data, "M5", recip)
-  m1_sum <- numerator_sum(maptg_data, "M1", recip)
+  top_env$m14_sum <- numerator_sum(maptg_data, "M14", recip)
+  top_env$m5_sum <- numerator_sum(maptg_data, "M5", recip)
+  top_env$m1_sum <- numerator_sum(maptg_data, "M1", recip)
 
-  #### FIGURE
-  plot_data <- make_fig7F5D31_data(maptg_data, recip)
-  fig7F5D31 <- make_fig7F5D31(plot_data)
-  content_id <- deparse(quote(fig7F5D31))
-  info7F5D31 <- paste(content_id, "m14")
+  #### GENERATE FIGURES
+  # make this the env handed to report
+  report_env <- build_figures(maptg_data, recip)
+  # Add top environment as parent of figures to gain access libraries and variables
+  parent.env(report_env) <- top_env
 
-  #### FIGURE
-  plot_mean <- micca_mean(maptg_data, "M1")
-  figADA835A <- circle_plot(maptg_data, recip, "M1", plot_mean)
-  content_id <- deparse(quote(figADA835A))
-  infoADA835A <- paste(content_id, "m1")
-
-  #### FIGURE
-  fig707A6E <- line_plot(maptg_data, recip, "M1")
-  content_id <- deparse(quote(fig707A6E))
-  info707A6E <- paste(content_id, "m1")
-
-  #### FIGURE
-  plot_mean <- micca_mean(maptg_data, "M3")
-  fig9C0A4F <- circle_plot(maptg_data, recip, "M3", plot_mean)
-  content_id <- deparse(quote(fig9C0A4F))
-  info9C0A4F <- paste(content_id, "m3")
-
-  ### FIGURE
-  plot_data <- make_figBE214E_data(maptg_data, recip)
-  figBE214E <- make_figBE214E(plot_data)
-  content_id <- deparse(quote(figBE214E))
-  infoBE214E <- paste(content_id, "m20,21")
-
-  #### FIGURE
-  plot_mean <- micca_mean(maptg_data, "M5")
-  fig540727 <- circle_plot(maptg_data, recip, "M5", plot_mean)
-  content_id <- deparse(quote(fig540727))
-  info540727 <- paste(content_id, "m5")
-
-  #### FIGURE
-  fig5BF5D0 <- line_plot(maptg_data, recip, "M5")
-  content_id <- deparse(quote(fig5BF5D0))
-  info5BF5D0 <- paste(content_id, "m5")
-
-  #### TABLE DATA
-  tbl82C4A3 <- make_table_data_tbl82C4A3(maptg_data, recip)
-  content_id <- deparse(quote(tbl82C4A3))
-  info82C4A3 <- paste(content_id, "m10,11,12,13")
-
-  #### FIGURE
-  plot_data <- make_fig1903AB_data(maptg_data, recip)
-  fig1903AB <- make_fig1903AB(plot_data)
-  content_id <- deparse(quote(fig1903AB))
-  info1903AB <- paste(content_id, "m10,11,12,13")
-
-  #### FIGURE
-  plot_mean <- micca_mean(maptg_data, "M8")
-  figBDBC81 <- circle_plot(maptg_data, recip, "M8", plot_mean)
-  content_id <- deparse(quote(figBDBC81))
-  infoBDBC81 <- paste(content_id, "m8")
-
-  #### FIGURE
-  plot_data <- make_figE8F578_data(maptg_data, recip)
-  figE8F578 <- make_figE8F578(plot_data)
-  content_id <- deparse(quote(figE8F578))
-  infoE8F578 <- paste(content_id, "m16,17,18,19")
-
-  # Generate Report
+  #### Generate Report
   template_path <- system.file("templates","report_v2.Rnw", package="miccareport")
   build_dir <- tempdir()
 
@@ -91,7 +43,7 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
   suppressMessages(
     utils::capture.output(
       knitr::knit2pdf(input = template_path,
-                      #envir=report_env,
+                      envir=report_env,
                       pdf_file= output_path)
    ))
 

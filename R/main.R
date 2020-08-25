@@ -1,7 +1,7 @@
 #' Generate report content for single site.
 #' @param recip string recipient of report: UMich, Hurley, Munson, WMH
 #' @param include_cid  boolean flag to show(TRUE) or hide(FALSE) the content identifiers
-#' @import knitr tikzDevice readr ggplot2 dplyr stringr tidyr kableExtra
+#' @import readr ggplot2 dplyr stringr tidyr
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter mutate group_by
 #' @importFrom rlang new_environment base_env
@@ -37,8 +37,15 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
 
   #### Generate Report
   template_path <- system.file("templates","report_v2.Rnw", package="miccareport")
-  build_dir <- tempdir()
+  knit_report(template_path, report_env, output_path)
 
+  return(invisible(NULL))
+}
+
+#readr ggplot2 dplyr stringr tidyr
+#' @import knitr tikzDevice
+#' @importFrom kableExtra kable_styling row_spec
+knit_report <- function(template_path, report_env, output_path){
   options(tinytex.engine="pdflatex")
   suppressMessages(
     utils::capture.output(
@@ -46,8 +53,6 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
                       envir=report_env,
                       pdf_file= output_path)
    ))
-
-  return(invisible(NULL))
 }
 
 ######################
@@ -57,10 +62,12 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
 #' @param begin yyyy-MM-dd format date of begin date inclusive
 #' @param end yyyy-MM-dd format date of end date excluded
 #' @return maptg dataframe trimmed to time interval
+#' @importFrom lubridate ymd
+#' @importFrom dplyr filter
 trim_data <- function(data, begin, end){
   begin_date <- lubridate::ymd(begin)
   end_date <- lubridate::ymd(end)
-  data %>% filter( time >= begin_date, time < end_date)
+  data %>% dplyr::filter( time >= begin_date, time < end_date)
 }
 
 ########################

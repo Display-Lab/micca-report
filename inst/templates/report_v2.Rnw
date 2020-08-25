@@ -87,19 +87,27 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TITLE %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{minipage}[t][0.07\textheight][t]{\textwidth}
+\begin{minipage}[t][0.1\textheight][t]{\textwidth}
 \centering
-\Large MICCA Quarterly Report for \Sexpr{ascribee_title} \Sexpr{start_month} - \Sexpr{end_month} \Sexpr{end_year}
+\Large Michigan Collaborative for Contraceptive Access (MICCA)\\
+\Large MICCA Quarterly Report  \Sexpr{start_month} - \Sexpr{end_month} \Sexpr{end_year}\\
+\Sexpr{ascribee_title}
 \end{minipage}
 
 \nointerlineskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: TOP %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\centering
-{\LARGE Overview for Women Aged 15-44 Who Delivered}\\\par
 
-\begin{minipage}[t][0.23\textheight][t]{0.3\textwidth}
+% TODO One off calculation for just Q2
+
+\begin{tcolorbox}[breakable,colback=white,colframe=black,width=\dimexpr\textwidth\relax]
+
+\centering
+{\large \textbf{Overview Q2 April - June 2020} }\\\par
+
+\newcommand\overviewheight{0.15\textheight}
+\begin{minipage}[t][\overviewheight][t]{0.2\textwidth}
   % Add strut to top of minipage to provide alignment baseline
   \strut\vspace*{-\baselineskip}\newline
   % content
@@ -113,7 +121,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}\hfill
-\begin{minipage}[t][0.23\textheight][t]{0.3\textwidth}
+\begin{minipage}[t][\overviewheight][t]{0.2\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \parbox{\textwidth}{
     \centering
@@ -124,7 +132,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \vfill
   \makebox[\textwidth]{}
 \end{minipage}\hfill
-\begin{minipage}[t][0.23\textheight][t]{0.3\textwidth}
+\begin{minipage}[t][\overviewheight][t]{0.2\textwidth}
   \strut\vspace*{-\baselineskip}\newline
   \parbox{\textwidth}{
     \centering
@@ -137,6 +145,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 \end{minipage}
 
 \nointerlineskip
+\end{tcolorbox}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE 1: MIDDLE %

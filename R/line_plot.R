@@ -20,7 +20,6 @@ line_plot <- function(maptg_data, recip, measure_id){
 
   plot_data <- maptg_data %>%
     filter(measure == measure_id, ascribee == recip) %>%
-    mutate(ascribee = MR$ASCRIBEE_TITLES[ascribee]) %>%
     bind_rows(micca_data) %>%
     group_by(ascribee, time) %>%
     summarize(
@@ -28,7 +27,7 @@ line_plot <- function(maptg_data, recip, measure_id){
       denominator = sum(denominator, na.rm=TRUE),
       rate = numerator/denominator) %>%
     mutate(
-      recipient = ifelse(ascribee == recipient_title, T, F),
+      recipient = ifelse(ascribee == recip, T, F),
       perf_label = ifelse(recipient, paste(numerator, denominator, sep="/"), NA),
       arrow = ifelse(recipient, "show", "noshow"),
       pcolor = ifelse(recipient, MR$DL_DARK_BLUE, MR$DL_GRAY))

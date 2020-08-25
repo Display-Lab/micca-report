@@ -1,4 +1,5 @@
 # Figures from initial version of report.
+#' @import dplyr
 make_fig7F5D31_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(measure =="M14", ascribee == recip) %>%
@@ -8,6 +9,7 @@ make_fig7F5D31_data <- function(maptg_data, recip){
            payer_rate = numerator/denominator)
 }
 
+#' @import ggplot2
 make_fig7F5D31 <- function(plot_data){
   ggplot(plot_data, aes(x=time, y=payer_rate)) +
     geom_bar(aes(fill=group), stat='identity', color=MR$DL_DARK_BLUE) +
@@ -20,6 +22,7 @@ make_fig7F5D31 <- function(plot_data){
           legend.title = element_blank(), legend.box.spacing = unit(0,"mm"))
 }
 
+#' @import dplyr
 make_figBE214E_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(measure %in% c("M20", "M21"), ascribee == recip) %>%
@@ -31,6 +34,7 @@ make_figBE214E_data <- function(maptg_data, recip){
     left_join(MR$MEASURE_NAMES, by="measure")
 }
 
+#' @import ggplot2
 make_figBE214E <- function(plot_data){
   ## TODO side by side figures facetted together or cowplotted
   ggplot(plot_data, aes(y=ratio)) +
@@ -45,6 +49,7 @@ make_figBE214E <- function(plot_data){
     guides(fill=guide_legend(nrow=2))
 }
 
+#' @import dplyr
 make_table_data_tbl82C4A3 <- function(maptg_data, recip){
   maptg_data %>%
     filter(ascribee == recip,
@@ -59,6 +64,7 @@ make_table_data_tbl82C4A3 <- function(maptg_data, recip){
     rename(Choice=short_name, Count=numerator, Percentage=percent )
 }
 
+#' @import dplyr
 make_fig1903AB_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(ascribee == recip,
@@ -71,6 +77,7 @@ make_fig1903AB_data <- function(maptg_data, recip){
     left_join(MR$MEASURE_NAMES, by="measure")
 }
 
+#' @import ggplot2
 make_fig1903AB <- function(plot_data){
   # Preference of LARC by payer
   ggplot(plot_data, aes(x=group, y=rate)) +
@@ -85,6 +92,7 @@ make_fig1903AB <- function(plot_data){
     guides(fill=guide_legend(nrow=2))
 }
 
+#' @import dplyr
 make_figE8F578_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(ascribee == recip,
@@ -98,6 +106,7 @@ make_figE8F578_data <- function(maptg_data, recip){
            mpos = as.numeric(short_name))
 }
 
+#' @import ggplot2
 make_figE8F578 <- function(plot_data){
   pref_pal <- c("Provided"=MR$DL_BLUE, "Preferred"=MR$DL_MAUVE)
   nudge_factor <- (plot_data %>% pull(denominator) %>% max) /20

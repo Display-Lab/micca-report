@@ -7,8 +7,19 @@
 #' @importFrom rlang new_environment base_env
 main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
 
-  #### TOP LEVEL REPORT ENV SETUP
-  # Include packages required for running report.
+  # Create report environment
+  report_env <- create_report_env(maptg_data, recip)
+
+  # Use report environment to create report
+  template_path <- system.file("templates","report_v2.Rnw", package="miccareport")
+  knit_report(template_path, report_env, output_path)
+
+  return(invisible(NULL))
+}
+
+#`` Create report environment
+create_report_env <- function(maptg_data, recip){
+  # Top level report env setup
   top_env <- report_environment()
 
   obs_end_date   <- maptg_data$time %>% max
@@ -24,25 +35,20 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
     top_env$ascribee_title <- MR$ASCRIBEE_TITLES[recip]
   }
 
-  #### SUMS: OVERVIEW
+  # Sums for reports
   top_env$m14_sum <- numerator_sum(maptg_data, "M14", recip)
   top_env$m5_sum <- numerator_sum(maptg_data, "M5", recip)
   top_env$m1_sum <- numerator_sum(maptg_data, "M1", recip)
 
-  #### GENERATE FIGURES
+  # Create figures
   # make this the env handed to report
   report_env <- build_figures(maptg_data, recip)
   # Add top environment as parent of figures to gain access libraries and variables
   parent.env(report_env) <- top_env
 
-  #### Generate Report
-  template_path <- system.file("templates","report_v2.Rnw", package="miccareport")
-  knit_report(template_path, report_env, output_path)
-
-  return(invisible(NULL))
+  return(report_env)
 }
 
-#readr ggplot2 dplyr stringr tidyr
 #' @import knitr tikzDevice
 #' @importFrom kableExtra kable_styling row_spec
 knit_report <- function(template_path, report_env, output_path){

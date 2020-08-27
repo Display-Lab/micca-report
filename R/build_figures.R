@@ -5,6 +5,13 @@
 build_figures <- function(maptg_data, recip){
   figs_env <- new_environment(parent=base_env())
 
+  # V2 One off.  Split data to Q1 and Q2.
+  q1_times <- c(ymd('2020-01-01'), ymd('2020-02-01'), ymd('2020-03-01'))
+  maptg_q1 <- dplyr::filter(maptg_data, time %in% q1_times)
+
+  q2_times <- c(ymd('2020-04-01'), ymd('2020-05-01'), ymd('2020-06-01'))
+  maptg_q2 <- dplyr::filter(maptg_data, time %in% q2_times)
+
   #### FIGURE
   plot_data <- make_fig7F5D31_data(maptg_data, recip)
   figs_env$fig7F5D31 <- make_fig7F5D31(plot_data)
@@ -40,20 +47,20 @@ build_figures <- function(maptg_data, recip){
   figs_env$infoBE214E <- paste(content_id, "m20,21")
 
   #### FIGURE
-  plot_mean <- micca_mean(maptg_data, "M5")
-  figs_env$fig540727 <- circle_plot(maptg_data, recip, "M5", plot_mean)
+  plot_mean <- micca_mean(maptg_q2, "M5")
+  figs_env$fig540727 <- circle_plot(maptg_q2, recip, "M5", plot_mean)
 
   content_id <- deparse(quote(fig540727))
   figs_env$info540727 <- paste(content_id, "m5")
 
   #### FIGURE
-  figs_env$fig5BF5D0 <- line_plot(maptg_data, recip, "M5")
+  figs_env$fig5BF5D0 <- line_plot(maptg_q2, recip, "M5")
 
   content_id <- deparse(quote(fig5BF5D0))
   figs_env$info5BF5D0 <- paste(content_id, "m5")
 
   #### TABLE DATA
-  figs_env$tbl82C4A3 <- make_table_data_tbl82C4A3(maptg_data, recip)
+  figs_env$tbl82C4A3 <- make_table_data_tbl82C4A3(maptg_q2, recip)
 
   content_id <- deparse(quote(tbl82C4A3))
   figs_env$info82C4A3 <- paste(content_id, "m10,11,12,13")
@@ -78,6 +85,13 @@ build_figures <- function(maptg_data, recip){
 
   content_id <- deparse(quote(figE8F578))
   figs_env$infoE8F578 <- paste(content_id, "m16,17,18,19")
+
+  #### FIGURE
+  plot_data <- make_figFEA046_data(maptg_q2, recip)
+  figs_env$figFEA046 <- make_figFEA046(plot_data)
+
+  content_id <- deparse(quote(figFEA046))
+  figs_env$infoFEA046 <- paste(content_id, "m10,11,12,13")
 
   return(figs_env)
 }

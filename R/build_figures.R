@@ -134,6 +134,12 @@ build_figures <- function(maptg_data, recip){
   content_id <- "fig0DB9AF"
   figs_env$infoA28BC2 <- paste(content_id, measures)
 
-  return(figs_env)
+  #### FIGURE
+  measures <- "M4"
+  figs_env$figC6EAF6 <- line_plot(maptg_q1, recip, measures)
 
+  content_id <- "figC6EAF6"
+  figs_env$infoC6EAF6 <- paste(content_id, measures)
+
+  return(figs_env)
 }

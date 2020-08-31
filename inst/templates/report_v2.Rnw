@@ -154,7 +154,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %% SUBTITLE Spanning entire page
 \begin{minipage}[t][0.02\textheight][t]{\textwidth}
 \centering
-\textbf{Prenatal Contraceptive Counseling}
+\textbf{Documented Prenatal Contraceptive Counseling}
 \end{minipage}
 
 \begin{minipage}[t][0.26\textheight][t]{0.5\textwidth}
@@ -209,8 +209,9 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   knitr::kable(tbl82C4A3,  format.args = list(digits=3), align='c',
                booktabs=T, format="latex")  %>%
   kable_styling(font_size = 14) %>%
-  row_spec(0, bold=T)
-
+  row_spec(0, bold=T) %>%
+  footnote(symbol="\\\\small Other inclues depo, pill, and condoms",
+           escape=F)
   @
   }
   \vfill
@@ -338,7 +339,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{info779D32}} \par }
   \fi
   \centering
-  Provision by Insurrance Type\\
+  Provision by Insurance Type\\
     << p2-bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
     fig779D32
     @
@@ -411,7 +412,14 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 \end{minipage}\hfill
 \begin{minipage}[t][0.29\textheight][t]{0.5\textwidth}
   \strut\vspace*{-\baselineskip}\newline
-  % Empty Quadrant
+  \ifincludeCID
+  \parbox{\textwidth}{ {\tiny \Sexpr{infoC6EAF6}} \par }
+  \fi
+  \centering
+  LARC by Month\\
+    << p3-bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
+    figC6EAF6
+    @
   \vfill
   \makebox[\linewidth]{}
 \end{minipage}

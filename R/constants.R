@@ -35,8 +35,8 @@ make_measure_names <- function(){
                       "M11", "M12", "M13", "M14", "M15",
                       "M16", "M17", "M18", "M19", "M20",
                       "M21"),
-          short_name = c("Provision 3 PP", "Provision 60 PP", "LARC 3 PP ", "LARC 60 PP", "Couseling",
-                         "Choice documented ", "Prefer IPLARC", "Preference provision", "LARC PP", "IUD",
+          short_name = c("Provision 3 PP", "Provision 60 PP", "LARC 3 PP", "LARC 60 PP", "Couseling",
+                         "Choice documented", "Prefer IPLARC", "Preference provision", "LARC PP", "IUD",
                          "Nexplanon", "PPTL", "Other", "Delivered", "",
                          "IUD", "Nexplanon", "PPTL", "Other", "IUD",
                          "Nexplanon")

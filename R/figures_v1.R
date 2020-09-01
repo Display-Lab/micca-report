@@ -1,5 +1,5 @@
 # Figures from initial version of report.
-#' @import dplyr
+#' @importFrom dplyr %>% filter mutate group_by recode
 make_fig7F5D31_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(measure =="M14", ascribee == recip) %>%
@@ -22,7 +22,7 @@ make_fig7F5D31 <- function(plot_data){
           legend.title = element_blank(), legend.box.spacing = unit(0,"mm"))
 }
 
-#' @import dplyr
+#' @importFrom dplyr %>% filter mutate group_by recode summarize left_join
 make_figBE214E_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(measure %in% c("M20", "M21"), ascribee == recip) %>%
@@ -49,7 +49,7 @@ make_figBE214E <- function(plot_data){
     guides(fill=guide_legend(nrow=2))
 }
 
-#' @import dplyr
+#' @importFrom dplyr %>% filter mutate group_by recode summarize left_join select rename
 make_table_data_tbl82C4A3 <- function(maptg_data, recip){
   maptg_data %>%
     filter(ascribee == recip,
@@ -64,7 +64,7 @@ make_table_data_tbl82C4A3 <- function(maptg_data, recip){
     rename(Choice=short_name, Count=numerator, Percentage=percent )
 }
 
-#' @import dplyr
+#' @importFrom dplyr %>% filter mutate group_by recode summarize left_join select rename
 make_fig1903AB_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(ascribee == recip,
@@ -92,7 +92,7 @@ make_fig1903AB <- function(plot_data){
     guides(fill=guide_legend(nrow=2))
 }
 
-#' @import dplyr
+#' @importFrom dplyr %>% filter mutate group_by summarize left_join
 make_figE8F578_data <- function(maptg_data, recip){
   maptg_data %>%
     filter(ascribee == recip,

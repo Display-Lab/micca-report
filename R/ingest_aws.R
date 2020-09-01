@@ -30,8 +30,8 @@ aggregate_files <- function(paths){
   Reduce(bind_rows, df_list)
 }
 
-#' Deduplicate data assumes newest data occurs first in data
-#' @import dplyr
+#' Deduplicate data assumes newest version of data occurs first in dataset
+#' @importFrom dplyr distinct
 dedupe_maptg <- function(raw_maptg){
   dplyr::distinct(.data=raw_maptg)
 }

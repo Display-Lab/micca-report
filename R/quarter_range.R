@@ -11,7 +11,7 @@ quarter_range <- function( date=NA ){
 
 #' Get the nearest previous quarter.
 #' @param date POSIXct or Date that previous quarter will be relative to.
-#' @importFrom lubridate now quarter
+#' @importFrom lubridate now quarter %m-% floor_date
 #' @return named list with begin and end dates of previous quarter
 previous_quarter_range <- function(date=NA){
   if(is.na(date)){ date <- lubridate::now("UTC") }

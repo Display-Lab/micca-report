@@ -1,10 +1,6 @@
 #' Generate report content for single site.
 #' @param recip string recipient of report: UMich, Hurley, Munson, WMH
 #' @param include_cid  boolean flag to show(TRUE) or hide(FALSE) the content identifiers
-#' @import readr ggplot2 dplyr stringr tidyr
-#' @importFrom magrittr %>%
-#' @importFrom dplyr filter mutate group_by
-#' @importFrom rlang new_environment base_env
 main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
 
   # Create report environment
@@ -17,7 +13,7 @@ main <- function(maptg_data, recip, output_path='report.pdf', include_cid=F){
   return(invisible(NULL))
 }
 
-#`` Create report environment
+#` Create report environment
 create_report_env <- function(maptg_data, recip){
   # Top level report env setup
   top_env <- report_environment()
@@ -49,8 +45,7 @@ create_report_env <- function(maptg_data, recip){
   return(report_env)
 }
 
-#' @import knitr tikzDevice
-#' @importFrom kableExtra kable_styling row_spec
+#' @importFrom knitr knit2pdf
 knit_report <- function(template_path, report_env, output_path){
   options(tinytex.engine="pdflatex")
   suppressMessages(

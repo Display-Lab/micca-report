@@ -1,5 +1,8 @@
 #' Circle Plot
-#' @import dplyr tibble
+#' @importFrom tibble tibble
+#' @importFrom dplyr %>% filter group_by summarize left_join filter pull
+#' @importFrom tidyr pivot_longer
+#' @import ggplot2
 circle_plot <- function(maptg_data, recip, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
   plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
                            ring=c(50,50,58),
@@ -26,14 +29,17 @@ circle_plot <- function(maptg_data, recip, measure_id, benchmark=NULL, benchmark
     scale_fill_identity() +
     scale_x_continuous(limits=c(0,70)) +
     coord_polar(theta="y", direction=-1) +
-    dl_annotate("text", x=5, y=denom/2, label=perf_label, size=9, color=MR$DL_DARK_BLUE, fontface=2) +
+    dl_annotate("text", x=5, y=denom/2, label=perf_label, size=9,
+                color=MR$DL_DARK_BLUE, fontface=2) +
     dl_annotate("text", x=20, y=0, label=paste(numer, denom, sep="/"),
                 size=4, color=MR$DL_DARK_BLUE) +
     top_performer_theme()
 
   if(!is.null(benchmark)){
     # scale benchmark to observed denominator and invert to accomodate polor coordiate direction=-1
-    bench_val <- plot_data %>% filter(obs=="denominator") %>% pull(value) * (1-benchmark)
+    bench_val <- plot_data %>%
+      filter(obs=="denominator") %>%
+      pull(value) * (1-benchmark)
 
     fig <- fig +
       scale_x_continuous(limits=c(0,95)) +

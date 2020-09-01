@@ -1,5 +1,6 @@
 # Common Line Plot
-#' @import dplyr ggplot2
+#' @importFrom dplyr %>% filter group_by summarize ungroup filter bind_rows mutate
+#' @import ggplot2
 line_plot <- function(maptg_data, recip, measure_id){
   recipient_title <- MR$ASCRIBEE_TITLES[recip]
 

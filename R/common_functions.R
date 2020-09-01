@@ -16,7 +16,7 @@ dl_annotate <- function(geom, x = NULL, y = NULL, xmin = NULL, xmax = NULL,
   do.call(annotate, args = args_list)
 }
 
-#' @import dplyr
+#' @importFrom dplyr %>% filter group_by summarize ungroup pull
 micca_mean <- function(maptg_data, measure_id){
   maptg_data %>%
     filter(measure==measure_id) %>%
@@ -27,7 +27,7 @@ micca_mean <- function(maptg_data, measure_id){
     pull(micca_mean)
 }
 
-#' @import dplyr
+#' @importFrom dplyr %>% filter pull
 #' @importFrom lubridate ymd
 numerator_sum <- function(maptg_data, measure_id, recipient){
   # V2 One off - limit to Q2

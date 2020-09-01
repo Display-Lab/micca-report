@@ -210,7 +210,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
                booktabs=T, format="latex")  %>%
   kable_styling(font_size = 14) %>%
   row_spec(0, bold=T) %>%
-  footnote(symbol="\\\\small Other inclues depo, pill, and condoms",
+  footnote(symbol="\\\\small Other includes Depo, pills, and condoms",
            escape=F)
   @
   }
@@ -416,7 +416,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoC6EAF6}} \par }
   \fi
   \centering
-  LARC by Month\\
+  LARC\\
     << p3-bot-right, include=TRUE, fig.show='hold', fig.width=4, fig.height=3, dev='pdf' >>=
     figC6EAF6
     @

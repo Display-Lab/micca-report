@@ -114,7 +114,7 @@ build_figures <- function(maptg_data, recip){
   #### FIGURE
   measures <- "M2"
   plot_mean <- micca_mean(maptg_q1, measures)
-  figs_env$fig0DB9AF <- circle_plot(maptg_q2, recip, measures, plot_mean)
+  figs_env$fig0DB9AF <- circle_plot(maptg_q1, recip, measures, plot_mean)
 
   content_id <- "fig0DB9AF"
   figs_env$info0DB9AF <- paste(content_id, measures)
@@ -129,9 +129,9 @@ build_figures <- function(maptg_data, recip){
   #### FIGURE
   measures <- "M4"
   plot_mean <- micca_mean(maptg_q1, measures)
-  figs_env$figA28BC2 <- circle_plot(maptg_q2, recip, measures, plot_mean)
+  figs_env$figA28BC2 <- circle_plot(maptg_q1, recip, measures, plot_mean)
 
-  content_id <- "fig0DB9AF"
+  content_id <- "figA28BC2"
   figs_env$infoA28BC2 <- paste(content_id, measures)
 
   #### FIGURE

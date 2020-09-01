@@ -3,13 +3,13 @@
 #' @importFrom dplyr %>% filter group_by summarize left_join filter pull
 #' @importFrom tidyr pivot_longer
 #' @import ggplot2
-circle_plot <- function(maptg_data, recip, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
+circle_plot <- function(data, recip, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
   plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
                            ring=c(50,50,58),
                            width=c(16,16,6),
                            fill_color=c(MR$DL_DARK_BLUE, MR$DL_LIGHT_BLUE, MR$DL_LIGHT_BLUE))
 
-  plot_data <- maptg_data %>%
+  plot_data <- data %>%
     filter(measure == measure_id, ascribee == recip) %>%
     group_by(measure) %>%
     summarize(

@@ -127,7 +127,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
     \centering
     \vspace{1cm}
     \textbf{\huge \Sexpr{m5_sum}}\par
-    Received Counseling\\
+    Counseling Documented\\
   }
   \vfill
   \makebox[\textwidth]{}
@@ -154,7 +154,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
 %% SUBTITLE Spanning entire page
 \begin{minipage}[t][0.02\textheight][t]{\textwidth}
 \centering
-\textbf{Documented Prenatal Contraceptive Counseling}
+\textbf{Documentation of Prenatal Contraceptive Counseling}
 \end{minipage}
 
 \begin{minipage}[t][0.26\textheight][t]{0.5\textwidth}
@@ -165,7 +165,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{info540727}} \par }
   \fi
   \centering
-  Received Prenatal Counseling\\
+  Counseling Documented\\
   \vspace{2mm}
     << p1-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      fig540727

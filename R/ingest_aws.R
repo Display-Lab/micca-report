@@ -3,6 +3,7 @@
 ingest_aws_dir <- function(data_dir='site_data'){
   paths <- enumerate_aws_dir(data_dir)
   raw_maptg <- aggregate_files(paths)
+  dedupe_maptg(raw_maptg)
 }
 
 #' Find and enumerate all csv file in the data directory.
@@ -33,5 +34,5 @@ aggregate_files <- function(paths){
 #' Deduplicate data assumes newest version of data occurs first in dataset
 #' @importFrom dplyr distinct
 dedupe_maptg <- function(raw_maptg){
-  dplyr::distinct(.data=raw_maptg)
+  dplyr::distinct(.data=raw_maptg, time, group, measure, ascribee, .keep_all=T)
 }

@@ -17,9 +17,11 @@ dl_annotate <- function(geom, x = NULL, y = NULL, xmin = NULL, xmax = NULL,
 }
 
 #' @importFrom dplyr %>% filter group_by summarize ungroup pull
+#' @note Munson data is filtered out as it's not a full cohort nor representative sample.
 micca_mean <- function(maptg_data, measure_id){
   maptg_data %>%
-    filter(measure==measure_id) %>%
+    filter(measure == measure_id,
+           ascribee != "Munson Medical Center") %>%
     group_by(ascribee) %>%
     summarize(hosp_mean = sum(numerator) / sum(denominator)) %>%
     ungroup() %>%

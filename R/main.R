@@ -39,7 +39,8 @@ trim_data <- function(data, begin, end){
 #' @return Filename string for a report based on generation time and recipient.
 #' @param recip String name of ascribee that will recieve report.
 report_path <- function(recip){
-  base <- paste("report", strftime(now(), format="%Y-%m-%d_%H%M"), recip, sep="_")
+  recip_dashed <- gsub(' ', '-', recip)
+  base <- paste(strftime(now(), format="%Y-%m-%d"), recip_dashed, sep="_")
   output_path <- paste(base, ".pdf", sep="")
 }
 

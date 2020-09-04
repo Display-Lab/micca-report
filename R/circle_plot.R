@@ -35,7 +35,7 @@ circle_plot <- function(data, recip, measure_id, benchmark=NULL, benchmark_label
                 size=4, color=MR$DL_DARK_BLUE) +
     top_performer_theme()
 
-  if(!is.null(benchmark)){
+  if(!is.null(benchmark) && !is.nan(benchmark)){
     # scale benchmark to observed denominator and invert to accomodate polor coordiate direction=-1
     bench_val <- plot_data %>%
       filter(obs=="denominator") %>%

@@ -41,7 +41,7 @@ line_plot <- function(maptg_data, recip, measure_id){
   ggplot(data=plot_data, aes(x=time, y=rate, color=ascribee)) +
     geom_line(size=1, lineend="round") +
     geom_point(size=2, fill=MR$DL_FILL, shape=21, stroke=1.2) +
-    scale_y_continuous(limits=c(0,1.15), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
+    scale_y_continuous(limits=c(0,1.2), expand=c(0,0), breaks=breaks_y, labels = labels_y) +
     scale_x_date(date_labels = "%b", expand=c(0.1,0), breaks=unique(plot_data$time)) +
     scale_shape_manual(values = c("show"=18, "noshow"=NA), guide = FALSE) +
     geom_point(mapping = aes(y = rate + 0.07, shape=arrow), size=4, color=MR$DL_DARK_BLUE) +

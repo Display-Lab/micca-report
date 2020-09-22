@@ -3,7 +3,7 @@
 #' @importFrom dplyr %>% filter group_by summarize left_join filter pull
 #' @importFrom tidyr pivot_longer
 #' @import ggplot2
-circle_plot <- function(data, recip, measure_id, benchmark=NULL, benchmark_label="MICCA\nAve." ){
+circle_plot <- function(data, recip, measure_id, benchmark=NULL, benchmark_label="MICCA\nAvg." ){
   plotting_attrs <- tibble(obs=c("numerator","gap","denominator"),
                            ring=c(50,50,58),
                            width=c(16,16,6),

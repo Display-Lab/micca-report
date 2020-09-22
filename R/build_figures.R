@@ -92,7 +92,9 @@ build_figures <- function(maptg_data, recip){
 
   #### FIGURE
   measures <- c("M10","M11","M12","M13")
-  figs_env$figFEA046 <- horizontal_bar_plot(maptg_q2, recip, measures)
+  #post generation remove x-axis labels
+  figs_env$figFEA046 <- horizontal_bar_plot(maptg_q2, recip, measures) +
+    theme(axis.text.x=element_blank(), axis.ticks=element_blank())
 
   content_id <- deparse(quote(figFEA046))
   figs_env$infoFEA046 <- paste(content_id, "m10,11,12,13")

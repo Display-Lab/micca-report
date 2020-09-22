@@ -8,7 +8,7 @@ create_report <- function(data, recip, output_path='report.pdf', include_cid=F){
   report_env <- create_report_env(data, recip)
 
   # Use report environment to create report
-  template_path <- system.file("templates","report_v2.Rnw", package="miccareport")
+  template_path <- system.file("templates","report_v3.Rnw", package="miccareport")
   knit_report(template_path, report_env, output_path)
 
   return(invisible(NULL))

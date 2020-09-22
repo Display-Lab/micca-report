@@ -1,6 +1,6 @@
 #' Main entry function generates reports of all ascribees with data in data_dir
-#' @param begin yyyy-MM-dd format date of begin date inclusive
-#' @param end yyyy-MM-dd format date of end date excluded
+#' @param begin yyyy-MM-dd format date of begin date (inclusive)
+#' @param end yyyy-MM-dd format date of end date (excluded)
 #' @param data_dir path to backend data directory.  Expects ascribde/timestamp_maptg.csv
 #' @note Given no begin or end, will assume previous quarter.
 #' @importFrom lubridate ymd
@@ -25,8 +25,8 @@ main <- function(data_dir='site_data', begin=NA, end=NA){
 }
 
 #' @param data maptg dataframe
-#' @param begin yyyy-MM-dd format date of begin date inclusive
-#' @param end yyyy-MM-dd format date of end date excluded
+#' @param begin yyyy-MM-dd format date of begin date (inclusive)
+#' @param end yyyy-MM-dd format date of end date (excluded)
 #' @return maptg dataframe trimmed to time interval
 #' @importFrom lubridate ymd
 #' @importFrom dplyr filter

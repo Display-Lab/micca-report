@@ -1,9 +1,16 @@
-#' Create report content for single site.
+#' Create Wraper
+#' Convenience function reordering the params of create_report for use with mapply
+create_wrapper <- function(recipient, outpath, data){
+  create_report(data, recipient, outpath)
+}
+
+#' Create Report
+#' Compile report for single site and write to disk
 #' @param data data frame of maptg data.
 #' @param recip string recipient of report as it appears in the data as ascribee.
+#' @param output_path string of path to write report to.
 #' @param include_cid  boolean flag to show(TRUE) or hide(FALSE) the content identifiers
 create_report <- function(data, recip, output_path='report.pdf', include_cid=F){
-
   # Create report environment
   report_env <- create_report_env(data, recip)
 
@@ -11,7 +18,7 @@ create_report <- function(data, recip, output_path='report.pdf', include_cid=F){
   template_path <- system.file("templates","report_v3.Rnw", package="miccareport")
   knit_report(template_path, report_env, output_path)
 
-  return(invisible(NULL))
+  return(invisible(output_path))
 }
 
 #` Create report environment

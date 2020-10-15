@@ -21,3 +21,27 @@ previous_quarter_range <- function(date=NA){
 
   quarter_range(prev_q_date)
 }
+
+#' Quarter Begin
+#' @param year numeric year
+#' @param quarter numeric quarter
+#' @return Date for beginning of quarter (inclusive)
+quarter_begin <- function(year, quarter){
+  month <- 1 + 3*(quarter-1)
+  make_date(year, month, 01)
+}
+
+#' Quarter End
+#' @param year numeric year
+#' @param quarter numeric quarter
+#' @return Date for end of quarter (excluded)
+#' @importFrom lubridate make_date
+quarter_end <- function(year, quarter){
+  month <- (4 + 3*(quarter-1)) %% 12
+  make_date(year, month, 01)
+}
+
+#' Previous Quarter
+#' @param numeric quarter
+#' @return numeric previous quarter
+prev_quarter <- function(quarter){ ifelse(quarter ==1, 4, quarter-1) }

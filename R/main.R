@@ -1,32 +1,38 @@
-#' Main entry function generates reports of all ascribees with data in data_dir
-#' @param begin yyyy-MM-dd format date of begin date inclusive
-#' @param end yyyy-MM-dd format date of end date excluded
-#' @param data_dir path to backend data directory.  Expects ascribde/timestamp_maptg.csv
-#' @note Given no begin or end, will assume previous quarter.
-#' @importFrom lubridate ymd
-#' @export
-main <- function(data_dir='site_data', begin=NA, end=NA){
-  if(is.na(begin) || is.na(end)){
-    quarter_lims <- previous_quarter_range()
-    begin <- as.Date(quarter_lims$begin)
-    end <- as.Date(quarter_lims$end)
-  } else {
-    begin <- ymd(begin)
-    end <- ymd(end)
+#' Main
+#' @param site_data string path to directory where site data is organized
+#' @param year numeric year. Defaults to current year.
+#' @param quarter numeric quarter. Defaults to previous quarter.
+#' @importFrom lubridate year now
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull
+main <- function(data_dir='site_data', year=NA, quarter=NA){
+  # Default to current year
+  if(is.na(year)){
+    year <- year(now())
   }
+
+  # Default to previous quarter
+  if(is.na(quarter)){
+    quarter <- prev_quarter( quarter(now()) )
+    year <- ifelse(quarter == 4, year-1, year)
+  }
+
+  begin <- quarter_begin(year, quarter)
+  end <- quarter_end(year, quarter)
 
   full_data <- ingest_aws_dir(data_dir)
   trimmed_data <- trim_data(full_data, begin, end)
 
   recipients <- trimmed_data %>% pull(ascribee) %>% unique()
-  output_paths <- sapply(recipients, report_path)
+  report_prefix <- paste(year, "Q", quarter, sep='')
+  output_paths <- sapply(recipients, report_path, prefix=report_prefix)
 
   mapply(create_wrapper, recipients, output_paths, MoreArgs=list(data=trimmed_data) )
 }
 
 #' @param data maptg dataframe
-#' @param begin yyyy-MM-dd format date of begin date inclusive
-#' @param end yyyy-MM-dd format date of end date excluded
+#' @param begin yyyy-MM-dd format date of begin date (inclusive)
+#' @param end yyyy-MM-dd format date of end date (excluded)
 #' @return maptg dataframe trimmed to time interval
 #' @importFrom lubridate ymd
 #' @importFrom dplyr filter
@@ -38,14 +44,14 @@ trim_data <- function(data, begin, end){
 
 #' @return Filename string for a report based on generation time and recipient.
 #' @param recip String name of ascribee that will recieve report.
-report_path <- function(recip){
+#' @param prefix String prefix for each report.  Defaults to date string.
+report_path <- function(recip, prefix=NA){
+  if(is.na(prefix)){
+    prefix <- strftime(now(), format="%Y-%m-%d")
+  }
   recip_dashed <- gsub(' ', '-', recip)
-  base <- paste(strftime(now(), format="%Y-%m-%d"), recip_dashed, sep="_")
+  base <- paste(prefix, recip_dashed, sep="_")
   output_path <- paste(base, ".pdf", sep="")
 }
 
-#' Convenience function reordering the params of create_report for use with mapply
-create_wrapper <- function(recipient, outpath, data){
-  create_report(data, recipient, outpath)
-}
 

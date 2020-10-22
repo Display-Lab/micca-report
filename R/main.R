@@ -24,8 +24,11 @@ main <- function(data_dir='site_data', year=NA, quarter=NA){
   trimmed_data <- trim_data(full_data, begin, end)
 
   recipients <- trimmed_data %>% pull(ascribee) %>% unique()
-  report_prefix <- paste(year, "Q", quarter, sep='')
-  output_paths <- sapply(recipients, report_path, prefix=report_prefix)
+  report_name_prefix <- paste(year, "Q", quarter, sep='')
+  output_paths <- sapply(recipients, report_path, prefix=report_name_prefix)
+
+  output_dirs <- sapply(output_paths, dirname)
+  sapply(output_dirs, dir.create, recursive=T, mode='0755')
 
   mapply(create_wrapper, recipients, output_paths, MoreArgs=list(data=trimmed_data) )
 }
@@ -44,14 +47,22 @@ trim_data <- function(data, begin, end){
 
 #' @return Filename string for a report based on generation time and recipient.
 #' @param recip String name of ascribee that will recieve report.
+#' @param prefix String prefix for each report.
+report_name <- function(recip, prefix){
+  base <- paste(prefix, recip, sep="_")
+  paste(base, ".pdf", sep="")
+}
+
+#' @return Path string for a report based on generation time and recipient.
+#' @param recip String name of ascribee that will recieve report.
 #' @param prefix String prefix for each report.  Defaults to date string.
 report_path <- function(recip, prefix=NA){
+  recip_dashed <- gsub(' ', '-', recip)
   if(is.na(prefix)){
     prefix <- strftime(now(), format="%Y-%m-%d")
   }
-  recip_dashed <- gsub(' ', '-', recip)
-  base <- paste(prefix, recip_dashed, sep="_")
-  output_path <- paste(base, ".pdf", sep="")
+  filename <- report_name(recip_dashed, prefix)
+  file.join('site_reports', recip_dashed, filename)
 }
 
 

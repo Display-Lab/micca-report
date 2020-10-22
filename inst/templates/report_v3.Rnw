@@ -398,7 +398,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoA28BC2}} \par }
   \fi
   \centering
-  Immediate LARC\\
+  LARC Rate\\
   \vspace{2mm}
     << p3-bot-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
     figA28BC2

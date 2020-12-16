@@ -5,6 +5,7 @@
 #' @importFrom lubridate year now
 #' @importFrom magrittr %>%
 #' @importFrom dplyr pull
+#' @export
 main <- function(data_dir='site_data', year=NA, quarter=NA){
   # Default to current year
   if(is.na(year)){
@@ -62,7 +63,7 @@ report_path <- function(recip, prefix=NA){
     prefix <- strftime(now(), format="%Y-%m-%d")
   }
   filename <- report_name(recip_dashed, prefix)
-  file.join('site_reports', recip_dashed, filename)
+  file.path('site_reports', recip_dashed, filename)
 }
 
 

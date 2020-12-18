@@ -32,12 +32,8 @@ micca_mean <- function(data, measure_id){
 #' @importFrom dplyr %>% filter pull
 #' @importFrom lubridate ymd
 numerator_sum <- function(maptg_data, measure_id, recipient){
-  # V2 One off - limit to Q2
-  q2_times <- c(ymd('2020-04-01'), ymd('2020-05-01'), ymd('2020-06-01'))
-
   maptg_data %>%
-    filter( time %in% q2_times,
-            measure == measure_id,
+    filter( measure == measure_id,
             ascribee == recipient) %>%
     pull(numerator) %>%
     sum()

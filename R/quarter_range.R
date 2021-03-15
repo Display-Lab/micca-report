@@ -38,6 +38,9 @@ quarter_begin <- function(year, quarter){
 #' @importFrom lubridate make_date
 quarter_end <- function(year, quarter){
   month <- (4 + 3*(quarter-1)) %% 12
+  if(quarter == 4){
+    year <- year + 1
+  }
   make_date(year, month, 01)
 }
 

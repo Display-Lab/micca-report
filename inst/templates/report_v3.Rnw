@@ -250,7 +250,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoBDBC81}} \par }
   \fi
   \centering
-  Women Who had a Live Birth and Received Their Preferred Contraceptive\\
+  Women Who had a Live Birth and Wanted Contraception that Received Their Preferred Method\\
   \vspace{2mm}
     << p2-top-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      figBDBC81
@@ -291,7 +291,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{infoADA835A}} \par }
   \fi
   \centering
-  Overall Rate\\
+  Overall Rate (Tubal, IUD, and Nexplanon)\\
     << p2-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      figADA835A
     @
@@ -368,7 +368,7 @@ if(include_cid){ cat('\\includeCIDtrue') }else{ cat('\\includeCIDfalse') }
   \parbox{\textwidth}{ {\tiny \Sexpr{info0DB9AF}} \par }
   \fi
   \centering
-  Overall Rate\\
+  Overall Rate (Tubal, IUD, and Nexplanon)\\
     << p3-mid-left, include=TRUE, fig.show='hold', fig.width=2.5, fig.height=2.5, dev='pdf' >>=
      fig0DB9AF
     @
